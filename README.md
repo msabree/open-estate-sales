@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Open Estate Sales
 
-## Getting Started
+**Open Estate Sales** is a free, open way to discover and post estate sales. We are building a public alternative so communities are not locked into a single paid listing gatekeeper. For years, many areas have effectively depended on one commercial directory (for example **EstateSales.net** / **ES.NET**); this project is meant to break that kind of lock-in with software anyone can inspect, host, and extend.
 
-First, run the development server:
+**Website:** [openestatesales.com](https://openestatesales.com)
+
+## Why this exists
+
+Estate sale listings should be easy to share and easy to find without a monopoly controlling who gets visibility. This project exists to give sellers, buyers, and communities a transparent, open option that anyone can run, fork, and improve.
+
+## License
+
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0). If you run a modified version as a network service, you must make your changes available under the same license—so improvements flow back to everyone.
+
+## Run locally
+
+Prerequisites: [Node.js](https://nodejs.org/) (LTS recommended).
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Edit `src/app/page.tsx` (and related files); the app hot-reloads.
 
-You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
+Other commands:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build   # production build
+npm run start   # run production server locally
+npm run lint    # ESLint
+```
 
-## Learn More
+## Tech stack
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+We welcome issues and pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md) for workflow, standards, and how to propose changes.
 
-## Deploy on Vercel
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project layout (high level)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+├── LICENSE
+├── README.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+└── .github/          # Issue and PR templates
+```

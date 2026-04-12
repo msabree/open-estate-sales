@@ -2,23 +2,23 @@ import { WaitlistForm } from "@/components/waitlist-form";
 
 const features = [
   "Free listings, always",
-  "TikTok & IG marketing",
   "Modern operator tools",
   "No hidden fees",
+  "API access for developers",
 ] as const;
 
 const competitorPain = [
   "Monthly listing fees",
   "Outdated interface",
-  "Zero social marketing",
+  "No API access",
   "You're just a listing",
 ] as const;
 
 const ourWins = [
   "Free to list, period",
-  "Built for 2025",
-  "TikTok & IG promotion",
-  "Your buyers, your brand",
+  "Built for the future generation of estate sale platforms",
+  "API access for developers",
+  "No spam. Just a launch email when we go live.",
 ] as const;
 
 function IconX({ className }: { className?: string }) {
@@ -84,8 +84,7 @@ export default function Home() {
             free, modern alternative
           </strong>{" "}
           to EstateSales.net — built for operators who are tired of paying to list
-          their own inventory. We&apos;ll market your sales on TikTok and bring you
-          buyers.
+          their own inventory.
         </p>
 
         <ul className="mt-8 flex flex-wrap gap-2">
