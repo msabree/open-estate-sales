@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Anton, Inter, Geist } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,7 +30,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${anton.variable} h-full scroll-smooth antialiased`}
+      className={cn(
+        "dark",
+        "h-full",
+        "scroll-smooth",
+        "antialiased",
+        inter.variable,
+        anton.variable,
+        "font-sans",
+        geist.variable,
+      )}
     >
       <body className="font-sans relative min-h-full bg-surface text-zinc-100">
         <div className="grain" aria-hidden />

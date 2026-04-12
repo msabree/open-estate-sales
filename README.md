@@ -18,10 +18,18 @@ Prerequisites: [Node.js](https://nodejs.org/) (LTS recommended).
 
 ```bash
 npm install
+cp .env.example .env.local
+# Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY from your Supabase project (Settings → API).
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). Edit `src/app/page.tsx` (and related files); the app hot-reloads.
+
+Without `.env.local`, the waitlist form shows a configuration message instead of submitting.
+
+## Supabase (waitlist)
+
+Database migrations and the **`waitlist`** Edge Function live under `supabase/`. Apply the migration and deploy the function to your Supabase project, then set the public URL and anon key in `.env.local`. See [db-schemas/README.md](db-schemas/README.md) for commands (`supabase db push`, `supabase functions deploy waitlist`).
 
 Other commands:
 
@@ -51,5 +59,10 @@ Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 ├── README.md
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
+├── .env.example
+├── db-schemas/       # Notes; SQL migrations are in supabase/migrations/
+├── supabase/
+│   ├── migrations/
+│   └── functions/waitlist/
 └── .github/          # Issue and PR templates
 ```
