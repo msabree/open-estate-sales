@@ -1,0 +1,166 @@
+import { WaitlistForm } from "@/components/waitlist-form";
+
+const features = [
+  "Free listings, always",
+  "TikTok & IG marketing",
+  "Modern operator tools",
+  "No hidden fees",
+] as const;
+
+const competitorPain = [
+  "Monthly listing fees",
+  "Outdated interface",
+  "Zero social marketing",
+  "You're just a listing",
+] as const;
+
+const ourWins = [
+  "Free to list, period",
+  "Built for 2025",
+  "TikTok & IG promotion",
+  "Your buyers, your brand",
+] as const;
+
+function IconX({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M18 6L6 18M6 6l12 12"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function IconCheck({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M20 6L9 17l-5-5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export default function Home() {
+  return (
+    <div className="flex flex-1 flex-col">
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-14 md:px-6 md:py-20 lg:max-w-4xl">
+        <p className="mb-6 inline-flex w-fit items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-wide text-zinc-950">
+          Free. Forever. Actually.
+        </p>
+
+        <h1 className="font-display text-5xl leading-[0.95] font-normal uppercase tracking-tight text-zinc-100 sm:text-6xl md:text-7xl lg:text-8xl">
+          Estate Sales,
+          <br />
+          <span className="text-accent">Unchained.</span>
+        </h1>
+
+        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-zinc-400 md:text-xl">
+          The{" "}
+          <strong className="font-semibold text-zinc-100">
+            free, modern alternative
+          </strong>{" "}
+          to EstateSales.net — built for operators who are tired of paying to list
+          their own inventory. We&apos;ll market your sales on TikTok and bring you
+          buyers.
+        </p>
+
+        <ul className="mt-8 flex flex-wrap gap-2">
+          {features.map((label) => (
+            <li
+              key={label}
+              className="flex items-center gap-2 rounded-lg border border-zinc-700/80 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-300"
+            >
+              <span
+                className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                aria-hidden
+              />
+              {label}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-10 flex flex-col gap-3">
+          <WaitlistForm />
+          <p className="text-center text-xs text-zinc-500 sm:text-left">
+            No spam. Just a launch email when we go live.
+          </p>
+        </div>
+
+        <div
+          className="my-16 h-px w-full bg-gradient-to-r from-transparent via-zinc-700 to-transparent"
+          role="separator"
+        />
+
+        <section aria-labelledby="compare-heading">
+          <p
+            id="compare-heading"
+            className="text-center text-xs font-medium uppercase tracking-[0.2em] text-zinc-500"
+          >
+            Why make the switch
+          </p>
+
+          <div className="relative mt-10 grid gap-10 md:grid-cols-2 md:gap-6">
+            <p
+              className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 font-display text-[clamp(4rem,18vw,9rem)] font-normal uppercase leading-none text-zinc-800/40 select-none md:block"
+              aria-hidden
+            >
+              vs
+            </p>
+
+            <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/40 p-6 md:p-8">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
+                EstateSales.net
+              </h2>
+              <ul className="mt-6 space-y-4">
+                {competitorPain.map((item) => (
+                  <li key={item} className="flex gap-3 text-zinc-400">
+                    <IconX className="mt-0.5 shrink-0 text-zinc-600" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-accent/25 bg-zinc-950/60 p-6 md:p-8">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-accent">
+                Us
+              </h2>
+              <ul className="mt-6 space-y-4">
+                {ourWins.map((item) => (
+                  <li key={item} className="flex gap-3 text-zinc-200">
+                    <IconCheck className="mt-0.5 shrink-0 text-accent" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
