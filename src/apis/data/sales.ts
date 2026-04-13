@@ -1,13 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
 import { applyAddressReveal, type PublicSale } from "@oes/types";
 
-export async function getSaleBySlug(slug: string): Promise<PublicSale | null> {
+export async function getPublicSale(
+  regionSlug: string,
+  listingSlug: string,
+): Promise<PublicSale | null> {
   const supabase = await createClient();
 
   const { data: row, error: saleError } = await supabase
     .from("sales_public_listing")
     .select("*")
-    .eq("slug", slug)
+    .eq("region_slug", regionSlug)
+    .eq("listing_slug", listingSlug)
     .maybeSingle();
 
   if (saleError || !row) {
@@ -38,11 +42,14 @@ export async function getSaleBySlug(slug: string): Promise<PublicSale | null> {
 export async function getSales({
   state,
   city,
+  regionSlug,
   limit = 20,
   offset = 0,
 }: {
   state?: string;
   city?: string;
+  /** SEO segment e.g. `atlanta-ga` — filters `/sales/[region]` listings */
+  regionSlug?: string;
   limit?: number;
   offset?: number;
 }): Promise<PublicSale[]> {
@@ -55,6 +62,9 @@ export async function getSales({
     .order("start_date", { ascending: true })
     .range(offset, offset + limit - 1);
 
+  if (regionSlug) {
+    query = query.eq("region_slug", regionSlug);
+  }
   if (state) {
     query = query.eq("state", state);
   }

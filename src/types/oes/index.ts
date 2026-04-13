@@ -15,12 +15,16 @@ export type PublicSalePhoto = {
   alt_text: string | null;
 };
 
-/** Row shape for discovery / detail (matches `sales_public_listing` + joined photos/operator). */
+/**
+ * Row shape for discovery / detail (matches `sales_public_listing` + joined photos/operator).
+ * Canonical URL: `/sales/{region_slug}/{listing_slug}`
+ */
 export type PublicSale = {
   id: string;
   operator_id: string;
   title: string;
-  slug: string;
+  region_slug: string;
+  listing_slug: string;
   description: string | null;
   city: string;
   state: string;
@@ -52,7 +56,9 @@ export function applyAddressReveal<
     lat?: number | null;
     lng?: number | null;
   },
->(row: T): T & { address: string | null; lat: number | null; lng: number | null } {
+>(
+  row: T,
+): T & { address: string | null; lat: number | null; lng: number | null } {
   const reveal =
     typeof row.address_reveal_at === "string" &&
     !Number.isNaN(Date.parse(row.address_reveal_at)) &&

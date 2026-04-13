@@ -1,36 +1,11 @@
 /**
- * Generate a SEO-friendly slug path for a sale.
- * Format: `{city}-{state}/{title-slug}-{year}`
- * Example: `atlanta-ga/smith-family-estate-2026`
+ * SEO path: `/sales/{regionSlug}/{listingSlug}`
+ * Example region: `atlanta-ga`, listing: `smith-family-estate-2026`
+ *
+ * Use 2-letter USPS state codes in `state` (e.g. `GA`) for stable URLs.
  */
-export function generateSaleSlug({
-  title,
-  city,
-  state,
-  startDate,
-}: {
-  title: string;
-  city: string;
-  state: string;
-  startDate: string;
-}): string {
-  const titleSlug = slugifySegment(title) || "sale";
 
-  const citySlug = city
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-
-  const stateSlug = state.toLowerCase().trim();
-
-  const parsed = new Date(startDate);
-  const year = Number.isNaN(parsed.getTime())
-    ? new Date().getFullYear()
-    : parsed.getFullYear();
-
-  return `${citySlug}-${stateSlug}/${titleSlug}-${year}`;
-}
+const SALES_BASE = "/sales";
 
 function slugifySegment(raw: string): string {
   return raw
@@ -40,6 +15,58 @@ function slugifySegment(raw: string): string {
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .trim();
+}
+
+/** `{city}-{state}` in lowercase, e.g. `atlanta-ga` */
+export function buildRegionSlug(city: string, state: string): string {
+  const cityPart = city
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+  const statePart = state.toLowerCase().trim();
+  return `${cityPart}-${statePart}`;
+}
+
+/** `{title-slug}-{year}` */
+export function buildListingSlug(title: string, startDate: string): string {
+  const titleSlug = slugifySegment(title) || "sale";
+  const parsed = new Date(startDate);
+  const year = Number.isNaN(parsed.getTime())
+    ? new Date().getFullYear()
+    : parsed.getFullYear();
+  return `${titleSlug}-${year}`;
+}
+
+export function generateSaleSeoSegments(input: {
+  title: string;
+  city: string;
+  state: string;
+  startDate: string;
+}): { regionSlug: string; listingSlug: string } {
+  return {
+    regionSlug: buildRegionSlug(input.city, input.state),
+    listingSlug: buildListingSlug(input.title, input.startDate),
+  };
+}
+
+/** Absolute path on this site (no domain). */
+export function salePublicPath(regionSlug: string, listingSlug: string): string {
+  return `${SALES_BASE}/${regionSlug}/${listingSlug}`;
+}
+
+/**
+ * Legacy composite slug `region/listing` (e.g. for stored redirects).
+ * Prefer `generateSaleSeoSegments` + `salePublicPath`.
+ */
+export function generateSaleSlugLegacy(input: {
+  title: string;
+  city: string;
+  state: string;
+  startDate: string;
+}): string {
+  const { regionSlug, listingSlug } = generateSaleSeoSegments(input);
+  return `${regionSlug}/${listingSlug}`;
 }
 
 /** ~0.5 mile offset in degrees (rough; varies slightly by latitude). */
