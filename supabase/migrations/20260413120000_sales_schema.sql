@@ -17,11 +17,11 @@ create table public.operators (
   city          text,
   state         text,
   created_at    timestamptz not null default now(),
-  constraint operators_email_lower unique (lower(trim(email))),
   constraint operators_slug_key unique (slug)
 );
 
-create index operators_slug_idx on public.operators (slug);
+-- Case-insensitive email uniqueness (expression UNIQUE needs index form here)
+create unique index operators_email_lower_idx on public.operators (lower(trim(email)));
 
 comment on table public.operators is 'Operator profile; PK = auth.users.id. Use list_public_operator_directory() for safe public reads (no email/phone).';
 
