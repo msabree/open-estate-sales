@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Anton, Inter, Geist } from "next/font/google";
 import "./globals.css";
+import { Footer } from "@/components/footer";
+import { NavBar } from "@/components/nav-bar";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -43,7 +45,11 @@ export default function RootLayout({
     >
       <body className="font-sans relative min-h-full bg-surface text-zinc-100">
         <div className="grain" aria-hidden />
-        <div className="relative z-10 flex min-h-full flex-col">{children}</div>
+        <div className="relative z-10 flex min-h-screen flex-col">
+          <NavBar />
+          <div className="flex flex-1 flex-col">{children}</div>
+          <Footer />
+        </div>
       </body>
     </html>
   );

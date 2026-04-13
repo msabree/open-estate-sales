@@ -1,5 +1,13 @@
 import { salePublicPath } from "@/utils/sales";
 
+/** Public GitHub repository (override via NEXT_PUBLIC_GITHUB_REPO_URL). */
+export function githubRepoUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_GITHUB_REPO_URL ??
+    "https://github.com/msabree/open-estate-sales"
+  ).replace(/\/$/, "");
+}
+
 /** Canonical site origin, no trailing slash. */
 export function siteOrigin(): string {
   return (
