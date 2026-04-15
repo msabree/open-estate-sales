@@ -1,26 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import type { MapSale } from "@/components/SalesMap";
 import SalesMap from "@/components/SalesMap";
 import ActiveFilters from "@/components/explore-sales/ActiveFilters";
 import EmptySales from "@/components/explore-sales/EmptySales";
+import SaleCard, { type ExploreSale } from "@/components/explore-sales/SaleCard";
 import StickyControlBar, {
   type DateRange,
   type SaleType,
   type ViewMode,
 } from "@/components/explore-sales/StickyControlbar";
 import UniversalSaleSearch from "@/components/explore-sales/UniversalSaleSearch";
-import { salePublicPath } from "@/utils/sales";
-
-type ExploreSale = MapSale & {
-  region_slug: string;
-  listing_slug: string;
-  city: string;
-  state: string;
-};
 
 type Props = {
   sales: ExploreSale[];
@@ -88,7 +79,6 @@ export default function ExploreSales({
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
-      {/* Your imported explore-sales controls are light-themed; keep them on a light strip. */}
       <StickyControlBar
         location={location}
         onChangeLocation={setLocation}
@@ -148,20 +138,9 @@ export default function ExploreSales({
 
         {/* Results list */}
         {viewMode === "list" ? (
-          <div className="mt-8 grid gap-3">
-            {filteredSales.map((s) => (
-              <Link
-                key={s.id}
-                href={salePublicPath(s.region_slug, s.listing_slug)}
-                className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-4 transition hover:border-zinc-700"
-              >
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-semibold text-zinc-100">{s.title}</h3>
-                  <span className="text-xs text-zinc-500">
-                    {s.city}, {s.state}
-                  </span>
-                </div>
-              </Link>
+          <div className="mt-8 grid gap-5">
+            {filteredSales.map((s, index) => (
+              <SaleCard key={s.id} sale={s} priority={index < 3} />
             ))}
           </div>
         ) : null}

@@ -1,13 +1,8 @@
-import type { MapSale } from "@/components/SalesMap";
 import ExploreSales from "@/components/ExploreSales";
+import type { ExploreSale } from "@/components/explore-sales/SaleCard";
 
 export default async function SalesIndexPage() {
-  const sales: (MapSale & {
-    region_slug: string;
-    listing_slug: string;
-    city: string;
-    state: string;
-  })[] = [
+  const sales: ExploreSale[] = [
     {
       id: "demo-atl-1",
       title: "Smith Family Estate",
@@ -21,6 +16,8 @@ export default async function SalesIndexPage() {
       city: "Atlanta",
       state: "GA",
       href: "/sales/atlanta-ga/smith-family-estate-2026",
+      workspace_id: "ws-demo-co",
+      created_by: "user-host-1",
     },
     {
       id: "demo-atl-2",
