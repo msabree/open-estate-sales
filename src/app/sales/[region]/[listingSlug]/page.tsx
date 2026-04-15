@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getPublicSale } from "@/apis/data/sales";
-import { absoluteUrl, canonicalSaleUrl } from "@/lib/seo/site";
+import { absoluteUrl, canonicalSaleUrl } from "@/utils/seo";
 import { salePublicPath } from "@/utils/sales";
 
 type Props = {
