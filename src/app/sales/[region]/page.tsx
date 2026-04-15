@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { getSales } from "@/apis/data/sales";
 import { salePublicPath } from "@/utils/sales";
-import { absoluteUrl } from "@/lib/seo/site";
+import { absoluteUrl } from "@/utils/seo";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ region: string }> };

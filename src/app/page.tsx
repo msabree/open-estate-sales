@@ -1,4 +1,4 @@
-import { WaitlistForm } from "@/components/waitlist-form";
+import { WaitlistForm } from "@/components/WaitlistForm";
 
 const features = [
   "Free listings, always",
