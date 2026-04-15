@@ -3,7 +3,7 @@ import type { SVGProps } from "react";
 /**
  * GitHub mark (fill). Lucide does not ship a GitHub logo in current builds; this matches common 24×24 usage.
  */
-export function GithubMarkIcon(props: SVGProps<SVGSVGElement>) {
+export function GithubIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 24 24"

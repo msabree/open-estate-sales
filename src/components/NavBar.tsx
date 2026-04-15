@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { SiteLogo } from "@/components/site-logo";
+import { SiteLogo } from "@/components/icons/Logo";
 import { cn } from "@/lib/utils";
 
 const links = [
