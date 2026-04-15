@@ -41,7 +41,7 @@ export default function UniversalSaleSearch({
   const allCategories = Array.from(new Set([...commonCategories, ...availableCategories])).sort();
 
   return (
-    <div className={`bg-white/70 backdrop-blur-sm border-b border-gray-100 ${className}`}>
+    <div className={`bg-surface/70 backdrop-blur-md border-b border-zinc-800/90 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-3 space-y-3">
           {marketplaceMode && (
@@ -53,11 +53,11 @@ export default function UniversalSaleSearch({
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
                   placeholder="Search items or tags..."
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-200 bg-white/80 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-zinc-800 bg-zinc-950/50 text-zinc-100 placeholder:text-zinc-600 focus:ring-2 focus:ring-accent/40 focus:border-accent"
                   aria-label="Search sales and items"
                 />
                 <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -77,8 +77,8 @@ export default function UniversalSaleSearch({
                   onClick={() => onCategoryChange('all')}
                   className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
                     selectedCategory === 'all'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-accent text-zinc-950'
+                      : 'bg-zinc-900/70 text-zinc-300 hover:bg-zinc-900 border border-zinc-800'
                   }`}
                 >
                   All
@@ -90,8 +90,8 @@ export default function UniversalSaleSearch({
                     onClick={() => onCategoryChange(category)}
                     className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap capitalize transition-colors ${
                       selectedCategory === category
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-accent text-zinc-950'
+                        : 'bg-zinc-900/70 text-zinc-300 hover:bg-zinc-900 border border-zinc-800'
                     }`}
                   >
                     {category}

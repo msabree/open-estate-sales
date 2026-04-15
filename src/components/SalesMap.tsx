@@ -76,11 +76,11 @@ export default function SalesMap({ sales, center, distance = 25, onCenterChange 
 
     // Create new radius circle
     radiusCircleRef.current = new google.maps.Circle({
-      strokeColor: '#4F46E5',
+      strokeColor: '#ccff00',
       strokeOpacity: 0.6,
       strokeWeight: 2,
-      fillColor: '#4F46E5',
-      fillOpacity: 0.1,
+      fillColor: '#ccff00',
+      fillOpacity: 0.06,
       map: mapInstanceRef.current,
       center: centerCoords,
       radius: radiusMiles * metersPerMile,
@@ -154,7 +154,7 @@ export default function SalesMap({ sales, center, distance = 25, onCenterChange 
         el.style.width = "16px";
         el.style.height = "16px";
         el.style.borderRadius = "9999px";
-        el.style.background = "#4285F4";
+        el.style.background = "#ccff00";
         el.style.border = "2px solid #FFFFFF";
         el.style.boxShadow = "0 6px 18px rgba(0,0,0,0.35)";
 
@@ -172,7 +172,7 @@ export default function SalesMap({ sales, center, distance = 25, onCenterChange 
           icon: {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 8,
-            fillColor: '#4285F4', // Google Blue
+            fillColor: '#ccff00',
             fillOpacity: 1,
             strokeColor: '#FFFFFF',
             strokeWeight: 2,
@@ -242,9 +242,9 @@ export default function SalesMap({ sales, center, distance = 25, onCenterChange 
             el.style.justifyContent = "center";
             el.style.fontSize = "12px";
             el.style.fontWeight = "700";
-            el.style.color = "#ffffff";
+            el.style.color = isCompanySale ? "#0a0a0a" : "#0a0a0a";
             el.style.border = "2px solid #ffffff";
-            el.style.background = isCompanySale ? "#10B981" : "#4F46E5";
+            el.style.background = isCompanySale ? "#fafafa" : "#ccff00";
             el.style.boxShadow = "0 10px 24px rgba(0,0,0,0.35)";
             el.textContent = String(index + 1);
 
@@ -263,7 +263,7 @@ export default function SalesMap({ sales, center, distance = 25, onCenterChange 
             icon: {
               path: google.maps.SymbolPath.CIRCLE,
               scale: 12,
-              fillColor: isCompanySale ? '#10B981' : '#4F46E5', // Green for company, Blue for personal
+              fillColor: isCompanySale ? '#fafafa' : '#ccff00',
               fillOpacity: 0.9,
               strokeColor: '#ffffff',
               strokeWeight: 2,
@@ -421,7 +421,7 @@ export default function SalesMap({ sales, center, distance = 25, onCenterChange 
             top: '50%',
           }}
         >
-          <div className="w-4 h-4 bg-purple-500 rounded-full shadow-lg"></div>
+          <div className="w-4 h-4 bg-accent rounded-full shadow-lg"></div>
         </div>
       </div>
 

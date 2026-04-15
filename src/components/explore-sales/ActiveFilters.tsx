@@ -32,30 +32,30 @@ const getDateRangeLabel = (v?: DateRange) => {
 export default function ActiveFilters({ filters, salesCount, className = '' }: Props) {
   return (
     <div
-      className={`mb-4 sm:mb-6 p-3 sm:p-4 mx-auto bg-indigo-50 border border-indigo-200 rounded-lg ${className}`}
+      className={`mb-4 sm:mb-6 p-3 sm:p-4 mx-auto bg-zinc-950/40 border border-zinc-800 rounded-xl ${className}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-indigo-800">
-          <span className="font-medium">Active Filters:</span>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-zinc-200">
+          <span className="font-medium text-zinc-300">Active filters</span>
 
           {filters.dateRange && (
-            <span className="px-2 py-1 bg-indigo-100 rounded-full text-xs">
+            <span className="px-2 py-1 bg-zinc-900/70 border border-zinc-800 rounded-full text-xs text-zinc-200">
               {getDateRangeLabel(filters.dateRange)}
             </span>
           )}
 
           {filters.saleType !== 'all' && filters.saleType && (
-            <span className="px-2 py-1 bg-indigo-100 rounded-full text-xs">
+            <span className="px-2 py-1 bg-zinc-900/70 border border-zinc-800 rounded-full text-xs text-zinc-200">
               {filters.saleType === 'company' ? 'Company Sales' : 'Personal Sales'}
             </span>
           )}
 
-          <span className="px-2 py-1 bg-indigo-100 rounded-full text-xs">
+          <span className="px-2 py-1 bg-zinc-900/70 border border-zinc-800 rounded-full text-xs text-zinc-200">
             Within {filters.distance} miles
           </span>
         </div>
 
-        <div className="text-xs sm:text-sm text-indigo-600 text-center sm:text-right">
+        <div className="text-xs sm:text-sm text-accent text-center sm:text-right font-semibold">
           {salesCount} sale{salesCount !== 1 ? 's' : ''} found
         </div>
       </div>

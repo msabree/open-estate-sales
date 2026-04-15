@@ -70,7 +70,7 @@ export default function StickyControlBar({
 
   return (
     <div
-      className={`sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm ${className}`}
+      className={`sticky top-0 z-40 bg-surface/85 backdrop-blur-md border-b border-zinc-800/90 ${className}`}
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Stack on mobile, row on md+ */}
@@ -84,19 +84,19 @@ export default function StickyControlBar({
                 readOnly
                 onClick={onLocationClick}
                 placeholder="City, state, or ZIP"
-                className={`w-full px-3 py-2 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm cursor-pointer hover:bg-gray-50 transition-colors ${
-                  isUpdatingLocation ? 'bg-blue-50 border-blue-300' : ''
+                className={`w-full px-3 py-2 pl-8 border border-zinc-800 rounded-lg bg-zinc-950/50 text-sm text-zinc-100 placeholder:text-zinc-600 cursor-pointer hover:bg-zinc-950/70 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent ${
+                  isUpdatingLocation ? 'bg-zinc-950/80 border-accent' : ''
                 }`}
                 aria-label="Location"
                 title="Tap to choose location on map"
               />
               {isUpdatingLocation ? (
                 <div className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4">
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent" />
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-accent border-t-transparent" />
                 </div>
               ) : (
                 <svg
-                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -127,21 +127,21 @@ export default function StickyControlBar({
             >
               <button
                 onClick={onCycleDateRange}
-                className="px-3 py-2 md:py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-full whitespace-nowrap transition-colors"
+                className="px-3 py-2 md:py-1.5 bg-zinc-900/70 hover:bg-zinc-900 text-zinc-200 text-sm font-medium rounded-full whitespace-nowrap transition-colors border border-zinc-800"
                 type="button"
               >
                 {dateLabel}
               </button>
               <button
                 onClick={onCycleDistance}
-                className="px-3 py-2 md:py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-full whitespace-nowrap transition-colors"
+                className="px-3 py-2 md:py-1.5 bg-zinc-900/70 hover:bg-zinc-900 text-zinc-200 text-sm font-medium rounded-full whitespace-nowrap transition-colors border border-zinc-800"
                 type="button"
               >
                 {distance} mi
               </button>
               <button
                 onClick={onCycleSaleType}
-                className="px-3 py-2 md:py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-full whitespace-nowrap transition-colors"
+                className="px-3 py-2 md:py-1.5 bg-zinc-900/70 hover:bg-zinc-900 text-zinc-200 text-sm font-medium rounded-full whitespace-nowrap transition-colors border border-zinc-800"
                 type="button"
               >
                 {saleTypeLabel}
@@ -151,7 +151,7 @@ export default function StickyControlBar({
 
           {/* View Toggle (full width segmented on mobile) */}
           <div className="order-4 md:order-3 w-full md:w-auto">
-            <div className="flex bg-gray-100 rounded-lg p-1 w-full md:w-auto">
+            <div className="flex bg-zinc-900/60 rounded-lg p-1 w-full md:w-auto border border-zinc-800">
               <button
                 onClick={() => {
                   onSetMarketplaceMode(false);
@@ -159,8 +159,8 @@ export default function StickyControlBar({
                 }}
                 className={`flex-1 md:flex-none px-3 py-2 md:py-1.5 rounded-md font-medium transition-all duration-200 text-sm ${
                   viewMode === 'list' && !marketplaceMode
-                    ? 'bg-white text-indigo-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800'
+                    ? 'bg-accent text-zinc-950 shadow-sm'
+                    : 'text-zinc-300 hover:text-zinc-100'
                 }`}
                 type="button"
                 aria-pressed={viewMode === 'list' && !marketplaceMode}
@@ -174,8 +174,8 @@ export default function StickyControlBar({
                 }}
                 className={`flex-1 md:flex-none px-3 py-2 md:py-1.5 rounded-md font-medium transition-all duration-200 text-sm ${
                   viewMode === 'map' && !marketplaceMode
-                    ? 'bg-white text-indigo-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800'
+                    ? 'bg-accent text-zinc-950 shadow-sm'
+                    : 'text-zinc-300 hover:text-zinc-100'
                 }`}
                 type="button"
                 aria-pressed={viewMode === 'map' && !marketplaceMode}
@@ -189,8 +189,8 @@ export default function StickyControlBar({
                 }}
                 className={`flex-1 md:flex-none px-3 py-2 md:py-1.5 rounded-md font-medium transition-all duration-200 text-sm ${
                   marketplaceMode
-                    ? 'bg-white text-indigo-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800'
+                    ? 'bg-accent text-zinc-950 shadow-sm'
+                    : 'text-zinc-300 hover:text-zinc-100'
                 }`}
                 type="button"
                 aria-pressed={marketplaceMode}
@@ -202,7 +202,7 @@ export default function StickyControlBar({
 
           {/* Results Count (right on desktop, under controls on mobile) */}
           <div
-            className="order-2 md:order-4 text-sm text-gray-600 font-medium md:ml-auto"
+            className="order-2 md:order-4 text-sm text-zinc-400 font-medium md:ml-auto"
             aria-live="polite"
           >
             {marketplaceMode ? `${itemsCount} items` : `${salesCount} sales`}
