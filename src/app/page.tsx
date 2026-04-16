@@ -1,68 +1,7 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
 import { WaitlistForm } from "@/components/WaitlistForm";
-
-const features = [
-  "Free listings, always",
-  "Modern operator tools",
-  "No hidden fees",
-  "API access for developers",
-] as const;
-
-const competitorPain = [
-  "Monthly listing fees",
-  "Outdated interface",
-  "No API access",
-  "You're just a listing",
-] as const;
-
-const ourWins = [
-  "Free to list, period",
-  "Built for the future generation of estate sale platforms",
-  "API access for developers",
-  "No spam. Just a launch email when we go live.",
-] as const;
-
-function IconX({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path
-        d="M18 6L6 18M6 6l12 12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconCheck({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path
-        d="M20 6L9 17l-5-5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export default function Home() {
   return (
@@ -87,21 +26,6 @@ export default function Home() {
           their own inventory.
         </p>
 
-        <ul className="mt-8 flex flex-wrap gap-2">
-          {features.map((label) => (
-            <li
-              key={label}
-              className="flex items-center gap-2 rounded-lg border border-border bg-white/80 px-3 py-2 text-sm text-foreground/90 shadow-sm dark:border-zinc-700/80 dark:bg-zinc-950/50 dark:text-zinc-300"
-            >
-              <span
-                className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
-                aria-hidden
-              />
-              {label}
-            </li>
-          ))}
-        </ul>
-
         <div className="mt-10 flex flex-col gap-3">
           <WaitlistForm />
           <p className="text-center text-xs text-muted-foreground sm:text-left">
@@ -109,56 +33,70 @@ export default function Home() {
           </p>
         </div>
 
-        <div
-          className="my-16 h-px w-full bg-gradient-to-r from-transparent via-zinc-300 to-transparent dark:via-zinc-700"
-          role="separator"
-        />
-
-        <section aria-labelledby="compare-heading">
-          <p
-            id="compare-heading"
-            className="text-center text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
-          >
-            Why make the switch
-          </p>
-
-          <div className="relative mt-10 grid gap-10 md:grid-cols-2 md:gap-6">
-            <p
-              className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 font-display text-[clamp(4rem,18vw,9rem)] font-normal uppercase leading-none text-zinc-300/80 select-none dark:text-zinc-800/40 md:block"
-              aria-hidden
-            >
-              vs
+        <div className="mt-14 space-y-8">
+          <div className="rounded-xl border border-dashed border-zinc-400/60 bg-zinc-500/[0.06] px-4 py-4 dark:border-zinc-600 dark:bg-zinc-950/50">
+            <p className="text-sm leading-relaxed text-foreground/90 dark:text-zinc-200">
+              <span className="mr-1.5" aria-hidden>
+                🚧
+              </span>
+              <strong className="font-semibold">We&apos;re building this in public.</strong>{" "}
+              Poke around — things will break, data is demo, and we ship fast. That&apos;s
+              the point.
             </p>
+          </div>
 
-            <div className="rounded-2xl border border-border bg-white/70 p-6 shadow-sm dark:border-zinc-800/80 dark:bg-zinc-950/40 md:p-8">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                EstateSales.net
-              </h2>
-              <ul className="mt-6 space-y-4">
-                {competitorPain.map((item) => (
-                  <li key={item} className="flex gap-3 text-muted-foreground">
-                    <IconX className="mt-0.5 shrink-0 text-zinc-400 dark:text-zinc-600" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div>
+            <p className="mb-4 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+              Pick a path
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Link
+                href="/sales"
+                className="group flex flex-col justify-between rounded-2xl border border-border bg-white/80 p-6 shadow-sm transition hover:border-accent/50 hover:bg-accent/[0.04] dark:border-zinc-800 dark:bg-zinc-950/50 dark:hover:bg-zinc-950/80"
+              >
+                <div>
+                  <h2 className="font-display text-xl uppercase tracking-tight text-foreground">
+                    Shoppers
+                  </h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Explore listings and the map — rough around the edges, real progress.
+                  </p>
+                </div>
+                <span className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-accent">
+                  Browse sales
+                  <ArrowRight
+                    className="size-4 transition group-hover:translate-x-0.5"
+                    aria-hidden
+                  />
+                </span>
+              </Link>
 
-            <div className="rounded-2xl border border-accent/30 bg-accent/[0.07] p-6 shadow-sm dark:border-accent/25 dark:bg-zinc-950/60 md:p-8">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-accent">
-                Us
-              </h2>
-              <ul className="mt-6 space-y-4">
-                {ourWins.map((item) => (
-                  <li key={item} className="flex gap-3 text-foreground/90 dark:text-zinc-200">
-                    <IconCheck className="mt-0.5 shrink-0 text-accent" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              <Link
+                href="/login"
+                className="group flex flex-col justify-between rounded-2xl border border-accent/35 bg-accent/[0.08] p-6 shadow-sm transition hover:border-accent/55 hover:bg-accent/[0.12] dark:border-accent/25 dark:bg-zinc-950/60 dark:hover:bg-zinc-950/80"
+              >
+                <div>
+                  <h2 className="font-display text-xl uppercase tracking-tight text-foreground">
+                    Operators
+                  </h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    List estate sales free — create an account to get started.
+                  </p>
+                </div>
+                <span className="mt-6 flex flex-col items-start gap-0.5">
+                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-foreground">
+                    List your sales free
+                    <ArrowRight
+                      className="size-4 text-accent transition group-hover:translate-x-0.5"
+                      aria-hidden
+                    />
+                  </span>
+                  <span className="text-xs text-muted-foreground">Sign up</span>
+                </span>
+              </Link>
             </div>
           </div>
-        </section>
+        </div>
       </main>
     </div>
   );

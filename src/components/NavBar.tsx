@@ -4,8 +4,8 @@ import { SiteLogo } from "@/components/icons/Logo";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "Home" },
-  { href: "/sales", label: "Sales" },
+  { href: "/login", label: "Operators" },
+  { href: "/sales", label: "Explore" },
 ] as const;
 
 type NavBarProps = {
