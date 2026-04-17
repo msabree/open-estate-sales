@@ -83,9 +83,11 @@ export function Landing({
               <a href="#changelog">Changelog</a>
             </nav>
 
-            <a className="btn" href="#docs">
-              View docs <ArrowRight />
-            </a>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <Link className="btn" href="/login">
+                Sign in
+              </Link>
+            </div>
           </div>
         </div>
       </header>
