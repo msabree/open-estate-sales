@@ -17,6 +17,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { SaleCreationStepper } from "@/components/operator/SaleCreationStepper";
+import { saleCreationSteps } from "@/components/operator/sale-creation-steps";
+
 function isoToDatetimeLocal(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
@@ -242,6 +245,7 @@ export default function SaleLocationForm({ saleId, initial }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
+      <SaleCreationStepper steps={saleCreationSteps(saleId)} />
       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         Draft · {initial.title}
       </p>
