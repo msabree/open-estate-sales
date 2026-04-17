@@ -3,6 +3,7 @@
 **Open Estate Sales** is a free, open way to discover and post estate sales. We are building a public alternative so communities are not locked into a single paid listing gatekeeper. For years, many areas have effectively depended on one commercial directory (for example **EstateSales.net** / **ES.NET**); this project is meant to break that kind of lock-in with software anyone can inspect, host, and extend.
 
 **Website:** [openestatesales.com](https://openestatesales.com)
+**Developer:** `developer.openestatesales.com`
 
 ## Why this exists
 
@@ -23,7 +24,10 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Edit `src/app/page.tsx` (and related files); the app hot-reloads.
+- Web app: [http://localhost:3000](http://localhost:3000)
+- Developer portal: [http://localhost:3001](http://localhost:3001)
+
+Edit `apps/web/src/app/page.tsx` or `apps/developer/src/app/page.tsx`; both hot-reload.
 
 ## Supabase (waitlist)
 
@@ -35,6 +39,14 @@ Other commands:
 npm run build   # production build
 npm run start   # run production server locally
 npm run lint    # ESLint
+npm run typecheck
+```
+
+### Run a single app
+
+```bash
+npm run dev -- --filter=@oes/web
+npm run dev -- --filter=@oes/developer
 ```
 
 ## Tech stack
@@ -53,14 +65,12 @@ Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 ## Project layout (high level)
 
 ```
-├── LICENSE
-├── README.md
-├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
-├── .env.example
-├── db-schemas/       # Notes; SQL migrations are in supabase/migrations/
-├── supabase/
-│   ├── migrations/
-│   └── functions/waitlist/
-└── .github/          # Issue and PR templates
+├── apps/
+│   ├── web/          # openestatesales.com (Next.js)
+│   └── developer/    # developer.openestatesales.com (Next.js)
+├── packages/
+│   ├── ui/           # shared UI components (WIP)
+│   └── sdk/          # shared TS SDK (WIP)
+├── supabase/         # migrations + edge functions
+└── turbo.json
 ```
