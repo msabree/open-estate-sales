@@ -55,20 +55,6 @@ export function salePublicPath(regionSlug: string, listingSlug: string): string 
   return `${SALES_BASE}/${regionSlug}/${listingSlug}`;
 }
 
-/**
- * Legacy composite slug `region/listing` (e.g. for stored redirects).
- * Prefer `generateSaleSeoSegments` + `salePublicPath`.
- */
-export function generateSaleSlugLegacy(input: {
-  title: string;
-  city: string;
-  state: string;
-  startDate: string;
-}): string {
-  const { regionSlug, listingSlug } = generateSaleSeoSegments(input);
-  return `${regionSlug}/${listingSlug}`;
-}
-
 /** ~0.5 mile offset in degrees (rough; varies slightly by latitude). */
 const FUZZ_OFFSET_DEG = 0.007;
 

@@ -6,7 +6,7 @@ create table public.developers (
   id uuid primary key references auth.users (id) on delete cascade,
   app_name text,
   github_username text,
-  tier text not null default 'free' check (tier in ('free', 'pro', 'enterprise')),
+  tier text not null default 'free' check (tier in ('free', 'pro')),
   created_at timestamptz not null default now()
 );
 

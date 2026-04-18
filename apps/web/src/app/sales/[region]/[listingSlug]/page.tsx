@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getPublicSale } from "@/apis/data/sales";
+import { salePhotoPublicUrl } from "@/config/sale-photos";
 import { absoluteUrl, canonicalSaleUrl } from "@/utils/seo";
 import { salePublicPath } from "@/utils/sales";
+import Image from "next/image";
 
 type Props = {
   params: Promise<{ region: string; listingSlug: string }>;
@@ -95,6 +97,29 @@ export default async function SaleDetailPage({ params }: Props) {
         <p className="mt-6 whitespace-pre-wrap text-foreground/85">
           {sale.description}
         </p>
+      ) : null}
+
+      {sale.photos && sale.photos.length > 0 ? (
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {sale.photos.map((photo, i) => {
+            const src = salePhotoPublicUrl(photo.storage_path);
+            if (!src) return null;
+            return (
+              <div
+                key={photo.id}
+                className="relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
+              >
+                <Image
+                  src={src}
+                  alt={photo.alt_text || `${sale.title} — photo ${i + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                />
+              </div>
+            );
+          })}
+        </div>
       ) : null}
 
       <script

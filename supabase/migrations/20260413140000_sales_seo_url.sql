@@ -7,7 +7,7 @@ alter table public.sales
   add column if not exists region_slug text,
   add column if not exists listing_slug text;
 
--- Backfill from legacy `slug` (city-state/title-year) or derive region from city + state
+-- Backfill from previous `slug` (city-state/title-year) or derive region from city + state
 update public.sales
 set
   region_slug = split_part(slug, '/', 1),

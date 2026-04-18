@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Free forever operator tier and AI Empowered — estate sale listings without the legacy gatekeeping.",
+    "Free forever operator tier and AI Empowered — open estate sale listings without closed-directory lock-in.",
 };
 
 const freeFeatures = [
@@ -42,7 +42,7 @@ export default function PricingPage() {
           We&apos;re building the free, open alternative to closed directories. Our{" "}
           <strong className="font-semibold text-foreground">Free Forever</strong>&nbsp;tier is 
           designed to feel like what you&apos;d expect from a{" "}
-          <strong className="font-semibold text-foreground">paid tier</strong>&nbsp;elsewhere. 
+          <strong className="font-semibold text-foreground">Pro tier</strong>&nbsp;elsewhere. 
         </p>
       </header>
 
@@ -155,7 +155,7 @@ export default function PricingPage() {
         aria-labelledby="pricing-why-heading"
       >
         <h3 id="pricing-why-heading" className="mb-3 font-semibold text-foreground">
-          Why a paid tier at all?
+          Why a Pro tier at all?
         </h3>
         <p className="mb-3">
           Our mission is to make{" "}
@@ -168,7 +168,7 @@ export default function PricingPage() {
         </p>
         <p>
           The free tier stays generous on purpose (similar in spirit to premium &quot;Silver&quot;
-          plans on legacy sites — but actually $0). If you&apos;re listing occasionally and can
+          plans on other sites — but actually $0). If you&apos;re listing occasionally and can
           work within 60-day retention and photo limits, you may never need to pay.
         </p>
       </section>

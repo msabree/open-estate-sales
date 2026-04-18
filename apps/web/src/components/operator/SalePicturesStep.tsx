@@ -1,6 +1,8 @@
 "use client";
 
 import type { OperatorSaleWizard } from "@/app/dashboard/actions";
+import type { SalePhotosState } from "@/app/dashboard/sale-photos-actions";
+import { SalePhotoUploader } from "@/components/operator/SalePhotoUploader";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { OperatorSaleWizardShell } from "@/components/operator/OperatorSaleWizardShell";
 import Link from "next/link";
@@ -9,9 +11,14 @@ import { useRouter } from "next/navigation";
 type Props = {
   saleId: string;
   initial: OperatorSaleWizard;
+  photosState: SalePhotosState;
 };
 
-export default function SalePicturesStep({ saleId, initial }: Props) {
+export default function SalePicturesStep({
+  saleId,
+  initial,
+  photosState,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -19,13 +26,15 @@ export default function SalePicturesStep({ saleId, initial }: Props) {
       saleId={saleId}
       draftTitle={initial.title}
       heading="Pictures"
-      description="Photo uploads will plug in here. You can publish now and add images later from your dashboard."
+      description="Add photos of items and spaces—buyers discover faster with good images."
     >
       <div className="mt-8 w-full space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
-        <p className="text-sm text-muted-foreground">
-          Gallery management is not wired in this step yet. Continue to publish your listing;
-          you can add listing photos in a follow-up.
-        </p>
+        <SalePhotoUploader
+          saleId={saleId}
+          operatorUserId={initial.operator_id}
+          initialPhotos={photosState.photos}
+          tier={photosState.tier}
+        />
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
           <Link
@@ -44,7 +53,7 @@ export default function SalePicturesStep({ saleId, initial }: Props) {
             <Button
               type="button"
               onClick={() => router.push(`/dashboard/sales/${saleId}/publish`)}
-              className="bg-accent font-semibold text-white hover:bg-accent/90"
+              className="bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
             >
               Next
             </Button>

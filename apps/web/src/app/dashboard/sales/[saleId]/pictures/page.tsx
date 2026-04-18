@@ -1,4 +1,8 @@
 import { getSaleForOperator } from "@/app/dashboard/actions";
+import {
+  getSalePhotosState,
+  type SalePhotosState,
+} from "@/app/dashboard/sale-photos-actions";
 import SalePicturesStep from "@/components/operator/SalePicturesStep";
 import { notFound } from "next/navigation";
 
@@ -12,5 +16,20 @@ export default async function OperatorSalePicturesPage({ params }: Props) {
     notFound();
   }
 
-  return <SalePicturesStep saleId={saleId} initial={result.data} />;
+  const photos = await getSalePhotosState(saleId);
+  const emptyPhotosState: SalePhotosState = {
+    photos: [],
+    publicUrls: [],
+    tier: "free",
+  };
+  const photosState: SalePhotosState =
+    photos.ok && photos.data !== undefined ? photos.data : emptyPhotosState;
+
+  return (
+    <SalePicturesStep
+      saleId={saleId}
+      initial={result.data}
+      photosState={photosState}
+    />
+  );
 }

@@ -133,6 +133,7 @@ export async function listOperatorSales(): Promise<
 /** Operator-facing sale row for the create-sale wizard and location form. */
 export type OperatorSaleWizard = {
   id: string;
+  operator_id: string;
   title: string;
   description: string | null;
   sale_kind: string;
@@ -168,7 +169,7 @@ export async function getSaleForOperator(
   const { data, error } = await supabase
     .from("sales")
     .select(
-      "id, title, description, sale_kind, phone_display, contact_phone_custom, directions_parking, terms_html, sale_dates_json, address, lat, lng, city, state, zip, address_reveal_at, region_slug, listing_slug, start_date, end_date, preview_times, status",
+      "id, operator_id, title, description, sale_kind, phone_display, contact_phone_custom, directions_parking, terms_html, sale_dates_json, address, lat, lng, city, state, zip, address_reveal_at, region_slug, listing_slug, start_date, end_date, preview_times, status",
     )
     .eq("id", saleId)
     .eq("operator_id", user.id)
