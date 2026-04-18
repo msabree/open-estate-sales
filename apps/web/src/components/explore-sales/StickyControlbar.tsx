@@ -121,10 +121,7 @@ export default function StickyControlBar({
 
           {/* Filter Chips (scrollable row on mobile) */}
           <div className="order-3 md:order-2 -mx-1 md:mx-0">
-            <div
-              className="flex items-center gap-2 overflow-x-auto md:overflow-visible px-1"
-              style={{ scrollbarWidth: 'none' } as React.CSSProperties}
-            >
+            <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto overscroll-x-contain px-1 [-webkit-overflow-scrolling:touch] md:overflow-visible">
               <button
                 onClick={onCycleDateRange}
                 className="rounded-full border border-zinc-200 bg-zinc-100/90 px-3 py-2 text-sm font-medium whitespace-nowrap text-zinc-800 transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-200 dark:hover:bg-zinc-900 md:py-1.5"

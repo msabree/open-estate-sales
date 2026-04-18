@@ -74,7 +74,7 @@ export default function UniversalSaleSearch({
               </div>
 
               {/* Categories */}
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+              <div className="scrollbar-hide -mx-1 flex gap-2 overflow-x-auto overscroll-x-contain px-1 pb-2 [-webkit-overflow-scrolling:touch]">
                 <button
                   onClick={() => onCategoryChange('all')}
                   className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap transition-colors ${
