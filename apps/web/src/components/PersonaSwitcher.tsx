@@ -28,6 +28,71 @@ const options: { value: Persona; label: string; short: string; Icon: typeof Stor
 ];
 
 /**
+ * Compact rows for account dropdown (same navigation as the pill switcher).
+ */
+export function PersonaMenuSection({
+  className,
+  onAfterSelect,
+}: {
+  className?: string;
+  onAfterSelect?: () => void;
+}) {
+  const router = useRouter();
+  const { user, persona, loading, setPersona } = usePersona();
+  const [pending, setPending] = useState(false);
+
+  if (!user || loading) {
+    return null;
+  }
+
+  async function select(next: Persona) {
+    if (next === persona || pending) return;
+    setPending(true);
+    const result = await setPersona(next);
+    setPending(false);
+    if (!result.ok) return;
+    onAfterSelect?.();
+    if (next === "operator") {
+      router.push("/dashboard");
+    } else {
+      router.push("/sales");
+    }
+    router.refresh();
+  }
+
+  return (
+    <div className={cn("border-border border-b px-1 py-1", className)}>
+      <p className="text-muted-foreground px-2 pb-1.5 text-[0.65rem] font-semibold uppercase tracking-wider">
+        Mode
+      </p>
+      <div className="flex flex-col gap-0.5">
+        {options.map(({ value, label, Icon }) => {
+          const active = persona === value;
+          return (
+            <button
+              key={value}
+              type="button"
+              disabled={pending}
+              onClick={() => void select(value)}
+              className={cn(
+                "flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm transition-colors",
+                active
+                  ? "bg-accent/15 text-foreground font-medium"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                pending && !active && "opacity-50",
+              )}
+            >
+              <Icon className="text-muted-foreground size-4 shrink-0" aria-hidden />
+              {label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/**
  * Airbnb-style mode control: separate browsing vs managing listings without mixing both in one IA.
  */
 export function PersonaSwitcher({ className }: Props) {

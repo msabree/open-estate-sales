@@ -3,7 +3,6 @@
 import Link from "next/link";
 
 import { OperatorAccountMenu } from "@/components/operator/OperatorAccountMenu";
-import { PersonaSwitcher } from "@/components/PersonaSwitcher";
 import { usePersona } from "@/components/persona/PersonaProvider";
 import { SiteLogo } from "@/components/icons/Logo";
 import { buttonVariants } from "@/components/ui/button";
@@ -15,7 +14,8 @@ type NavBarProps = {
 
 export function NavBar({ className }: NavBarProps) {
   const { user, persona, loading } = usePersona();
-  const isOperator = Boolean(user) && persona === "operator";
+  const showBrowseNav =
+    !loading && (!user || persona === "shopper");
 
   return (
     <header
@@ -29,43 +29,19 @@ export function NavBar({ className }: NavBarProps) {
           <SiteLogo size="compact" />
         </div>
         <div className="flex flex-1 flex-wrap items-center justify-end gap-2 sm:gap-3 md:flex-nowrap md:justify-end md:gap-4">
-          <nav
-            className="order-last flex w-full items-center gap-3 text-sm font-medium uppercase tracking-wider text-muted-foreground md:order-none md:ml-4 md:w-auto md:gap-5"
-            aria-label="Main"
-          >
-            {isOperator ? (
-              <Link
-                href="/dashboard"
-                className="transition-colors hover:text-accent"
-              >
-                Dashboard
+          {showBrowseNav ? (
+            <nav
+              className="order-last flex w-full items-center gap-3 text-sm font-medium uppercase tracking-wider text-muted-foreground md:order-none md:ml-4 md:w-auto md:gap-5"
+              aria-label="Main"
+            >
+              <Link href="/sales" className="transition-colors hover:text-accent">
+                Browse
               </Link>
-            ) : null}
-            <Link href="/sales" className="transition-colors hover:text-accent">
-              Browse
-            </Link>
-          </nav>
+            </nav>
+          ) : null}
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href="/dashboard"
-              className="text-sm font-semibold text-foreground transition-colors hover:text-accent sm:hidden"
-            >
-              List
-            </Link>
-            <Link
-              href="/dashboard"
-              className="hidden text-sm font-semibold text-foreground transition-colors hover:text-accent sm:inline"
-            >
-              List a sale
-            </Link>
-            {/* Persona only applies once signed in; guests browse as shoppers. */}
-            {!loading && user ? (
-              <>
-                <PersonaSwitcher />
-                <OperatorAccountMenu />
-              </>
-            ) : null}
+            {!loading && user ? <OperatorAccountMenu /> : null}
             {!loading && !user ? (
               <Link
                 href="/login"

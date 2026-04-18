@@ -1,23 +1,73 @@
 "use client";
 
+import { PersonaMenuSection } from "@/components/PersonaSwitcher";
 import { usePersona } from "@/components/persona/PersonaProvider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { ChevronDown, LayoutGrid, LogOut, UserRound } from "lucide-react";
+import { LayoutGrid, LogOut, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+type OperatorBranding = {
+  logoUrl: string | null;
+  letter: string;
+};
+
+function letterFromOperator(
+  row: {
+    company_name: string | null;
+    name: string;
+    operator_kind: string | null;
+  } | null,
+  email: string | undefined,
+): string {
+  if (
+    row?.operator_kind === "company" &&
+    row.company_name?.trim()
+  ) {
+    return row.company_name.trim().charAt(0).toUpperCase();
+  }
+  const base =
+    row?.name?.trim() || email?.split("@")[0] || "?";
+  return base.charAt(0).toUpperCase();
+}
+
 /**
- * Minimal account menu (no avatar): dashboard / profile when in operator mode, sign out for any signed-in user.
+ * Account menu: circular avatar (logo or initial), persona mode, dashboard/profile when listing, sign out.
  */
 export function OperatorAccountMenu({ className }: { className?: string }) {
   const { user, persona, loading } = usePersona();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const isOperator = persona === "operator";
+
+  const [branding, setBranding] = useState<OperatorBranding | null>(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return;
+
+    void supabase
+      .from("operators")
+      .select("company_name, name, operator_kind, company_logo_url")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        const logo =
+          data?.company_logo_url?.trim() &&
+          data.operator_kind === "company"
+            ? data.company_logo_url.trim()
+            : null;
+        setBranding({
+          logoUrl: logo,
+          letter: letterFromOperator(data, user.email ?? undefined),
+        });
+      });
+  }, [user?.id, user?.email]);
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -47,30 +97,34 @@ export function OperatorAccountMenu({ className }: { className?: string }) {
     return null;
   }
 
+  const displayLetter = branding?.letter ?? user.email?.charAt(0).toUpperCase() ?? "?";
+
   return (
     <div className={cn("relative", className)} ref={wrapRef}>
       <Button
         type="button"
-        variant="outline"
-        size="sm"
+        variant="ghost"
+        size="icon"
         aria-expanded={open}
         aria-haspopup="menu"
+        aria-label="Account menu"
         onClick={() => setOpen((o) => !o)}
-        className="gap-1 font-semibold uppercase tracking-wider"
+        className="size-9 shrink-0 rounded-full p-0"
       >
-        <UserRound className="size-3.5" aria-hidden />
-        <span className="hidden sm:inline">Account</span>
-        <ChevronDown
-          className={cn("size-3.5 transition-transform", open && "rotate-180")}
-          aria-hidden
-        />
+        <Avatar className="size-9 border-0">
+          <AvatarImage src={branding?.logoUrl ?? undefined} alt="" />
+          <AvatarFallback className="text-xs">{displayLetter}</AvatarFallback>
+        </Avatar>
       </Button>
+
       {open ? (
         <div
           role="menu"
-          className="border-border bg-popover text-popover-foreground absolute right-0 z-50 mt-1 w-52 rounded-lg border py-1 text-sm shadow-md"
+          className="border-border bg-popover text-popover-foreground absolute right-0 z-50 mt-2 w-56 rounded-lg border py-1 text-sm shadow-md"
         >
-          {isOperator ? (
+          <PersonaMenuSection onAfterSelect={() => setOpen(false)} />
+
+          {persona === "operator" ? (
             <>
               <Link
                 role="menuitem"
@@ -90,9 +144,11 @@ export function OperatorAccountMenu({ className }: { className?: string }) {
                 <UserRound className="text-muted-foreground size-4" aria-hidden />
                 Profile
               </Link>
-              <div className="bg-border my-1 h-px" role="separator" />
             </>
           ) : null}
+
+          <div className="bg-border my-1 h-px" role="separator" />
+
           <button
             role="menuitem"
             type="button"
