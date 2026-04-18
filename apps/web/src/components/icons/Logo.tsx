@@ -24,7 +24,7 @@ export function SiteLogo({ className, size = "default" }: SiteLogoProps) {
       aria-label="Open Estate Sales — home"
     >
       <span className="text-accent">OPEN</span>
-      <span className="text-zinc-900 dark:text-zinc-100">ESTATESALES</span>
+      <span className="text-foreground">ESTATESALES</span>
     </Link>
   );
 }

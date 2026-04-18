@@ -28,7 +28,7 @@ function StepCircle({
     <div
       className={cn(
         "relative z-10 flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold shadow-sm",
-        state === "completed" && "border-accent/30 bg-accent text-zinc-950",
+        state === "completed" && "border-accent/30 bg-accent text-white",
         state === "current" && "border-accent bg-background text-accent",
         state === "upcoming" && "border-border bg-muted/50 text-muted-foreground",
       )}
@@ -65,7 +65,7 @@ export function SaleCreationStepper({ steps }: Props) {
                   label={
                     state === "completed" ? (
                       <Check
-                        className="size-[1.125rem] stroke-[2.5] text-zinc-950"
+                        className="size-[1.125rem] stroke-[2.5] text-white"
                         aria-hidden
                       />
                     ) : (

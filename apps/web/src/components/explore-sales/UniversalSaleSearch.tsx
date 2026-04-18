@@ -79,7 +79,7 @@ export default function UniversalSaleSearch({
                   onClick={() => onCategoryChange('all')}
                   className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap transition-colors ${
                     selectedCategory === "all"
-                      ? "bg-accent text-zinc-950"
+                      ? "bg-accent text-white"
                       : "border border-zinc-200 bg-zinc-100/90 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:bg-zinc-900"
                   }`}
                 >
@@ -92,7 +92,7 @@ export default function UniversalSaleSearch({
                     onClick={() => onCategoryChange(category)}
                     className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap capitalize transition-colors ${
                       selectedCategory === category
-                        ? "bg-accent text-zinc-950"
+                        ? "bg-accent text-white"
                         : "border border-zinc-200 bg-zinc-100/90 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:bg-zinc-900"
                     }`}
                   >

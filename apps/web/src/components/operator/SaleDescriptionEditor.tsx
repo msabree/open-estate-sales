@@ -111,7 +111,7 @@ function EditorToolbarButton({
       className={cn(
         "rounded-md px-2 py-1 text-xs font-medium uppercase tracking-wide transition-colors",
         active
-          ? "bg-accent text-zinc-950"
+          ? "bg-accent text-white"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
     >

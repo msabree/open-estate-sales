@@ -88,7 +88,7 @@ export default function ForgotPassword({ onDone }: Props) {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-accent/90 disabled:opacity-60"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent/90 disabled:opacity-60"
         >
           {pending ? "Sending…" : "Send link"}
         </button>

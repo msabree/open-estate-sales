@@ -159,7 +159,7 @@ export default function StickyControlBar({
                 }}
                 className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:flex-none md:py-1.5 ${
                   viewMode === "list" && !marketplaceMode
-                    ? "bg-accent text-zinc-950 shadow-sm"
+                    ? "bg-accent text-white shadow-sm"
                     : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
                 }`}
                 type="button"
@@ -174,7 +174,7 @@ export default function StickyControlBar({
                 }}
                 className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:flex-none md:py-1.5 ${
                   viewMode === "map" && !marketplaceMode
-                    ? "bg-accent text-zinc-950 shadow-sm"
+                    ? "bg-accent text-white shadow-sm"
                     : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
                 }`}
                 type="button"
@@ -189,7 +189,7 @@ export default function StickyControlBar({
                 }}
                 className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:flex-none md:py-1.5 ${
                   marketplaceMode
-                    ? "bg-accent text-zinc-950 shadow-sm"
+                    ? "bg-accent text-white shadow-sm"
                     : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
                 }`}
                 type="button"

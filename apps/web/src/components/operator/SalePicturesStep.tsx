@@ -44,7 +44,7 @@ export default function SalePicturesStep({ saleId, initial }: Props) {
             <Button
               type="button"
               onClick={() => router.push(`/dashboard/sales/${saleId}/publish`)}
-              className="bg-accent font-semibold text-zinc-950 hover:bg-accent/90"
+              className="bg-accent font-semibold text-white hover:bg-accent/90"
             >
               Next
             </Button>

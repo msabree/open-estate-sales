@@ -53,7 +53,7 @@ export default function RootLayout({
         <ThemeProvider>
           <PersonaProvider>
             <div
-              className="grain opacity-[0.08] dark:opacity-[0.22]"
+              className="grain opacity-[0.02] dark:opacity-[0.18]"
               aria-hidden
             />
             <div className="relative z-10 flex min-h-screen flex-col">

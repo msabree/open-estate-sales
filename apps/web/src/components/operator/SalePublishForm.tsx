@@ -97,7 +97,7 @@ export default function SalePublishForm({ saleId, initial }: Props) {
                 href={publishedSaleHref(initial.region_slug, initial.listing_slug)}
                 className={cn(
                   buttonVariants({ variant: "default", size: "default" }),
-                  "bg-accent font-semibold text-zinc-950 hover:bg-accent/90",
+                  "bg-accent font-semibold text-white hover:bg-accent/90",
                 )}
               >
                 View listing
@@ -110,7 +110,7 @@ export default function SalePublishForm({ saleId, initial }: Props) {
                   mutation.mutate();
                 }}
                 disabled={mutation.isPending}
-                className="bg-accent font-semibold text-zinc-950 hover:bg-accent/90"
+                className="bg-accent font-semibold text-white hover:bg-accent/90"
               >
                 {mutation.isPending ? (
                   <>

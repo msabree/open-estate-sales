@@ -330,7 +330,7 @@ function LoginForm() {
                     disabled={
                       pending || (!isLogin && !agreedToTerms)
                     }
-                    className="w-full rounded-lg bg-accent py-3 text-sm font-semibold text-zinc-950 shadow-lg transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full rounded-lg bg-accent py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {pending
                       ? isLogin

@@ -30,7 +30,7 @@ export function CreateDraftSaleButton() {
         type="button"
         onClick={() => void handleClick()}
         disabled={createSale.isPending}
-        className="bg-accent font-semibold text-zinc-950 hover:bg-accent/90"
+        className="bg-accent font-semibold text-white hover:bg-accent/90"
       >
         {createSale.isPending ? (
           <>

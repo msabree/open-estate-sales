@@ -470,7 +470,7 @@ export default function SaleLocationForm({ saleId, initial }: Props) {
           <Button
             onClick={() => void handleNext()}
             disabled={basicsMutation.isPending || mapsLoading}
-            className="bg-accent font-semibold text-zinc-950 hover:bg-accent/90"
+            className="bg-accent font-semibold text-white hover:bg-accent/90"
           >
             {basicsMutation.isPending ? (
               <>

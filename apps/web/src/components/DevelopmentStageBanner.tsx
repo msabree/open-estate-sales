@@ -15,32 +15,32 @@ const STAGE_COPY: Record<
     title: string;
     body: string;
     Icon: typeof Hammer;
-    accent: "volt" | "emerald";
+    accent: "brand" | "emerald";
   }
 > = {
   building: {
     title: "We're currently building.",
     body: "Feel free to poke around and break stuff. We ship fast and data might reset without warning.",
     Icon: Hammer,
-    accent: "volt",
+    accent: "brand",
   },
   experimental: {
     title: "Experimental build.",
     body: "The core is here, but it's rough. If you find a bug, we'd love a PR or an issue report.",
     Icon: FlaskConical,
-    accent: "volt",
+    accent: "brand",
   },
   alpha: {
     title: "Alpha testing.",
     body: "It's early days. Code is open source—come help us make this better.",
     Icon: Rocket,
-    accent: "volt",
+    accent: "brand",
   },
   beta: {
     title: "Beta.",
     body: "Things are stabilizing. Thanks for helping us harden the product before the big launch.",
     Icon: Gauge,
-    accent: "volt",
+    accent: "brand",
   },
   live: {
     title: "We're live.",
@@ -59,17 +59,18 @@ export function DevelopmentStageBanner() {
       role="status"
       aria-label={`Product stage: ${stage}`}
       className={cn(
-        "border-b border-dashed border-border/90 bg-zinc-500/[0.06] dark:border-zinc-600/80 dark:bg-zinc-950/40",
-        accent === "volt" && "border-l-[3px] border-l-volt border-dashed",
-        accent === "emerald" &&
-          "border-l-[3px] border-l-emerald-500 border-dashed",
+        "border-b border-dashed border-border/70 bg-muted/60 dark:border-zinc-600/80 dark:bg-zinc-950/40",
+        accent === "brand" && "border-l-[3px] border-l-accent",
+        accent === "emerald" && "border-l-[3px] border-l-emerald-500",
       )}
     >
       <div className="mx-auto flex max-w-6xl items-start gap-2.5 px-4 py-2.5 sm:items-center sm:gap-3 sm:px-6">
         <Icon
           className={cn(
             "mt-0.5 size-4 shrink-0 sm:mt-0",
-            accent === "volt" ? "text-accent" : "text-emerald-600 dark:text-emerald-400",
+            accent === "brand"
+              ? "text-accent"
+              : "text-emerald-600 dark:text-emerald-400",
           )}
           aria-hidden
         />

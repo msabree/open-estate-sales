@@ -268,7 +268,7 @@ export default function SaleDatesForm({ saleId, initial }: Props) {
               type="button"
               onClick={() => void handleNext()}
               disabled={mutation.isPending}
-              className="bg-accent font-semibold text-zinc-950 hover:bg-accent/90"
+              className="bg-accent font-semibold text-white hover:bg-accent/90"
             >
               {mutation.isPending ? (
                 <>
