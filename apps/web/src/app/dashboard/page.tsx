@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { CreateDraftSaleButton } from "@/components/operator/CreateDraftSaleButton";
 import { createClient } from "@/lib/supabase/server";
+import { parsePersonaFromMetadata } from "@/lib/persona";
 
 export default async function DashboardHomePage() {
   const supabase = await createClient();
@@ -12,6 +13,8 @@ export default async function DashboardHomePage() {
   if (!user) {
     return null;
   }
+
+  const isOperator = parsePersonaFromMetadata(user.user_metadata) === "operator";
 
   const { data: sales } = await supabase
     .from("sales")
@@ -27,6 +30,16 @@ export default async function DashboardHomePage() {
       <p className="mt-2 text-muted-foreground">
         Drafts and listings tied to your account. More tools soon.
       </p>
+      {isOperator ? (
+        <p className="mt-3 text-sm">
+          <Link
+            href="/dashboard/profile"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Operator profile
+          </Link>
+        </p>
+      ) : null}
 
       <div className="mt-8">
         <CreateDraftSaleButton />

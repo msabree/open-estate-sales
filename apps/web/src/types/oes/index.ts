@@ -6,6 +6,8 @@ export type PublicOperator = {
   slug: string;
   city: string | null;
   state: string | null;
+  operator_kind: "individual" | "company";
+  company_logo_url: string | null;
 };
 
 export type PublicSalePhoto = {

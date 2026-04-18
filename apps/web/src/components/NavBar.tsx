@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { OperatorAccountMenu } from "@/components/operator/OperatorAccountMenu";
 import { PersonaSwitcher } from "@/components/PersonaSwitcher";
 import { usePersona } from "@/components/persona/PersonaProvider";
 import { SiteLogo } from "@/components/icons/Logo";
@@ -59,7 +60,12 @@ export function NavBar({ className }: NavBarProps) {
               List a sale
             </Link>
             {/* Persona only applies once signed in; guests browse as shoppers. */}
-            {!loading && user ? <PersonaSwitcher /> : null}
+            {!loading && user ? (
+              <>
+                <PersonaSwitcher />
+                <OperatorAccountMenu />
+              </>
+            ) : null}
             {!loading && !user ? (
               <Link
                 href="/login"
