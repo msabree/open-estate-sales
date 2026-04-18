@@ -49,7 +49,7 @@ export default function SalePublishForm({ saleId, initial }: Props) {
       heading="Publish"
       description="Make this sale visible on the public map and listing pages."
     >
-      <div className="mt-8 space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
+      <div className="mt-8 w-full space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={cn(
@@ -74,8 +74,8 @@ export default function SalePublishForm({ saleId, initial }: Props) {
         ) : null}
 
         <p className="text-sm text-muted-foreground">
-          Publishing requires a valid address and coordinates (from the Info step) and a real
-          title (not the default &quot;New sale&quot;).
+          Publishing requires basics &amp; location, listing copy (terms + description), and at
+          least one scheduled sale day. Use a real sale name (not the default &quot;New sale&quot;).
         </p>
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">

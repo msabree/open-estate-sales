@@ -1,25 +1,13 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { buildRegionSlug, fuzzCoordinates } from "@/utils/sales";
+import { buildRegionSlug } from "@/utils/sales";
 import type { User } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
 export type ActionResult<T = void> =
   | { ok: true; data?: T }
   | { ok: false; message: string };
-
-const updateLocationSchema = z.object({
-  saleId: z.string().uuid(),
-  address: z.string().min(1),
-  latitude: z.number(),
-  longitude: z.number(),
-  city: z.string().min(1),
-  state: z.string().length(2),
-  zip: z.string().nullable(),
-  addressRevealAt: z.string().min(1),
-});
 
 async function getUser(): Promise<{
   supabase: Awaited<ReturnType<typeof createClient>>;
@@ -147,6 +135,12 @@ export type OperatorSaleWizard = {
   id: string;
   title: string;
   description: string | null;
+  sale_kind: string;
+  phone_display: string;
+  contact_phone_custom: string | null;
+  directions_parking: string | null;
+  terms_html: string | null;
+  sale_dates_json: unknown | null;
   address: string | null;
   lat: number | null;
   lng: number | null;
@@ -174,7 +168,7 @@ export async function getSaleForOperator(
   const { data, error } = await supabase
     .from("sales")
     .select(
-      "id, title, description, address, lat, lng, city, state, zip, address_reveal_at, region_slug, listing_slug, start_date, end_date, preview_times, status",
+      "id, title, description, sale_kind, phone_display, contact_phone_custom, directions_parking, terms_html, sale_dates_json, address, lat, lng, city, state, zip, address_reveal_at, region_slug, listing_slug, start_date, end_date, preview_times, status",
     )
     .eq("id", saleId)
     .eq("operator_id", user.id)
@@ -185,52 +179,3 @@ export async function getSaleForOperator(
   return { ok: true, data };
 }
 
-export async function updateSaleLocation(
-  raw: z.infer<typeof updateLocationSchema>,
-): Promise<ActionResult> {
-  const parsed = updateLocationSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { ok: false, message: parsed.error.issues[0]?.message ?? "Invalid data." };
-  }
-
-  const {
-    saleId,
-    address,
-    latitude,
-    longitude,
-    city,
-    state,
-    zip,
-    addressRevealAt,
-  } = parsed.data;
-
-  const { supabase, user } = await getUser();
-  if (!user) return { ok: false, message: "Not signed in." };
-
-  const { lat_fuzzy, lng_fuzzy } = fuzzCoordinates(latitude, longitude);
-  const regionSlug = buildRegionSlug(city, state);
-
-  const { error } = await supabase
-    .from("sales")
-    .update({
-      address,
-      lat: latitude,
-      lng: longitude,
-      lat_fuzzy,
-      lng_fuzzy,
-      city,
-      state,
-      zip,
-      region_slug: regionSlug,
-      address_reveal_at: addressRevealAt,
-    })
-    .eq("id", saleId)
-    .eq("operator_id", user.id);
-
-  if (error) return { ok: false, message: error.message };
-
-  revalidatePath("/dashboard");
-  revalidatePath(`/dashboard/sales/${saleId}/location`);
-  revalidatePath("/sales");
-  return { ok: true };
-}

@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { applyAddressReveal, type PublicSale } from "@oes/types";
 
-/** Public listing reads (server). Operator mutations: `createSale`, `updateSaleLocation`, etc. in `sales-client.ts`. */
+/** Public listing reads (server). Operator mutations live in `sales-client.ts`. */
 
 export async function getPublicSale(
   regionSlug: string,

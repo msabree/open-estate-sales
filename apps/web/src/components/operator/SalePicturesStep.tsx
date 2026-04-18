@@ -21,7 +21,7 @@ export default function SalePicturesStep({ saleId, initial }: Props) {
       heading="Pictures"
       description="Photo uploads will plug in here. You can publish now and add images later from your dashboard."
     >
-      <div className="mt-8 space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
+      <div className="mt-8 w-full space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
         <p className="text-sm text-muted-foreground">
           Gallery management is not wired in this step yet. Continue to publish your listing;
           you can add listing photos in a follow-up.

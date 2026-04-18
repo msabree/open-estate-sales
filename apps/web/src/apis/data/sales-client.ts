@@ -3,13 +3,16 @@
  * Public server reads stay in `sales.ts` (server-only).
  */
 
+import type { SaleKindValue } from "@/lib/sale-kinds";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { plainTextFromHtml } from "@/utils/html";
 import {
   buildListingSlug,
   buildRegionSlug,
   fuzzCoordinates,
   salePublicPath,
 } from "@/utils/sales";
+import type { SaleDateRow } from "@/form-schemas/sale";
 
 export type MutationResult<T = void> =
   | { ok: true; data?: T }
@@ -106,8 +109,14 @@ export async function createSale(): Promise<
   return { ok: true, data: { saleId: data.id } };
 }
 
-export type UpdateSaleLocationInput = {
+/** Wizard step 1: name, kind, phone, directions, address & reveal. */
+export type UpdateSaleBasicsInput = {
   saleId: string;
+  title: string;
+  saleKind: SaleKindValue;
+  phoneDisplay: "show_account" | "hidden" | "custom";
+  contactPhoneCustom: string | null;
+  directionsParking: string | null;
   address: string;
   latitude: number;
   longitude: number;
@@ -117,54 +126,8 @@ export type UpdateSaleLocationInput = {
   addressRevealAt: string;
 };
 
-export async function updateSaleLocation(
-  input: UpdateSaleLocationInput,
-): Promise<MutationResult> {
-  const supabase = getSupabaseBrowserClient();
-  if (!supabase) {
-    return { ok: false, message: "Missing Supabase client configuration." };
-  }
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-  if (authError || !user) {
-    return { ok: false, message: "Not signed in." };
-  }
-
-  const { lat_fuzzy, lng_fuzzy } = fuzzCoordinates(input.latitude, input.longitude);
-  const regionSlug = buildRegionSlug(input.city, input.state);
-
-  const { error } = await supabase
-    .from("sales")
-    .update({
-      address: input.address,
-      lat: input.latitude,
-      lng: input.longitude,
-      lat_fuzzy,
-      lng_fuzzy,
-      city: input.city,
-      state: input.state,
-      zip: input.zip,
-      region_slug: regionSlug,
-      address_reveal_at: input.addressRevealAt,
-    })
-    .eq("id", input.saleId)
-    .eq("operator_id", user.id);
-
-  if (error) return { ok: false, message: error.message };
-  return { ok: true };
-}
-
-export type UpdateSaleDetailsInput = {
-  saleId: string;
-  title: string;
-  description: string | null;
-};
-
-export async function updateSaleDetails(
-  input: UpdateSaleDetailsInput,
+export async function updateSaleBasics(
+  input: UpdateSaleBasicsInput,
 ): Promise<MutationResult> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) {
@@ -181,7 +144,7 @@ export async function updateSaleDetails(
 
   const title = input.title.trim();
   if (!title) {
-    return { ok: false, message: "Enter a sale title." };
+    return { ok: false, message: "Enter a sale name." };
   }
 
   const { data: row, error: fetchError } = await supabase
@@ -197,11 +160,79 @@ export async function updateSaleDetails(
   const listingSlug = buildListingSlug(title, row.start_date);
   const regionSlug = buildRegionSlug(row.city, row.state);
 
+  const { lat_fuzzy, lng_fuzzy } = fuzzCoordinates(input.latitude, input.longitude);
+
   const { error } = await supabase
     .from("sales")
     .update({
       title,
-      description: input.description?.trim() || null,
+      sale_kind: input.saleKind,
+      phone_display: input.phoneDisplay,
+      contact_phone_custom:
+        input.phoneDisplay === "custom"
+          ? input.contactPhoneCustom?.trim() || null
+          : null,
+      directions_parking: input.directionsParking?.trim() || null,
+      address: input.address,
+      lat: input.latitude,
+      lng: input.longitude,
+      lat_fuzzy,
+      lng_fuzzy,
+      city: input.city,
+      state: input.state,
+      zip: input.zip,
+      region_slug: regionSlug,
+      listing_slug: listingSlug,
+      address_reveal_at: input.addressRevealAt,
+    })
+    .eq("id", input.saleId)
+    .eq("operator_id", user.id);
+
+  if (error) return { ok: false, message: error.message };
+  return { ok: true };
+}
+
+/** Wizard step 2: terms + listing description (HTML). */
+export type UpdateSaleListingCopyInput = {
+  saleId: string;
+  termsHtml: string | null;
+  descriptionHtml: string | null;
+};
+
+export async function updateSaleListingCopy(
+  input: UpdateSaleListingCopyInput,
+): Promise<MutationResult> {
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) {
+    return { ok: false, message: "Missing Supabase client configuration." };
+  }
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return { ok: false, message: "Not signed in." };
+  }
+
+  const { data: row, error: fetchError } = await supabase
+    .from("sales")
+    .select("title, start_date, city, state")
+    .eq("id", input.saleId)
+    .eq("operator_id", user.id)
+    .maybeSingle();
+
+  if (fetchError) return { ok: false, message: fetchError.message };
+  if (!row) return { ok: false, message: "Sale not found." };
+
+  const listingSlug = buildListingSlug(row.title, row.start_date);
+  const regionSlug = buildRegionSlug(row.city, row.state);
+
+  const { error } = await supabase
+    .from("sales")
+    .update({
+      terms_html: input.termsHtml?.trim() || null,
+      description: input.descriptionHtml?.trim() || null,
       listing_slug: listingSlug,
       region_slug: regionSlug,
     })
@@ -214,9 +245,8 @@ export async function updateSaleDetails(
 
 export type UpdateSaleScheduleInput = {
   saleId: string;
-  startDate: string;
-  endDate: string;
-  previewTimes: string | null;
+  saleDates: SaleDateRow[];
+  previewNotes: string | null;
 };
 
 export async function updateSaleSchedule(
@@ -235,13 +265,13 @@ export async function updateSaleSchedule(
     return { ok: false, message: "Not signed in." };
   }
 
-  if (!input.startDate || !input.endDate) {
-    return { ok: false, message: "Start and end dates are required." };
+  if (!input.saleDates.length) {
+    return { ok: false, message: "Add at least one sale day." };
   }
 
-  if (input.endDate < input.startDate) {
-    return { ok: false, message: "End date must be on or after start date." };
-  }
+  const days = [...input.saleDates].sort((a, b) => a.date.localeCompare(b.date));
+  const startDate = days[0]!.date;
+  const endDate = days[days.length - 1]!.date;
 
   const { data: row, error: fetchError } = await supabase
     .from("sales")
@@ -253,15 +283,16 @@ export async function updateSaleSchedule(
   if (fetchError) return { ok: false, message: fetchError.message };
   if (!row) return { ok: false, message: "Sale not found." };
 
-  const listingSlug = buildListingSlug(row.title, input.startDate);
+  const listingSlug = buildListingSlug(row.title, startDate);
   const regionSlug = buildRegionSlug(row.city, row.state);
 
   const { error } = await supabase
     .from("sales")
     .update({
-      start_date: input.startDate,
-      end_date: input.endDate,
-      preview_times: input.previewTimes?.trim() || null,
+      start_date: startDate,
+      end_date: endDate,
+      sale_dates_json: days,
+      preview_times: input.previewNotes?.trim() || null,
       listing_slug: listingSlug,
       region_slug: regionSlug,
     })
@@ -290,7 +321,9 @@ export async function publishSale(saleId: string): Promise<
 
   const { data: row, error: fetchError } = await supabase
     .from("sales")
-    .select("address, lat, lng, title, region_slug, listing_slug")
+    .select(
+      "address, lat, lng, title, region_slug, listing_slug, description, terms_html, sale_dates_json",
+    )
     .eq("id", saleId)
     .eq("operator_id", user.id)
     .maybeSingle();
@@ -307,7 +340,35 @@ export async function publishSale(saleId: string): Promise<
 
   const t = row.title.trim();
   if (!t || t === "New sale") {
-    return { ok: false, message: "Set a descriptive title before publishing." };
+    return { ok: false, message: "Set a descriptive sale name before publishing." };
+  }
+
+  const descPlain = plainTextFromHtml(row.description as string | null);
+  if (descPlain.length < 20) {
+    return {
+      ok: false,
+      message: "Add a full description (step 2) before publishing.",
+    };
+  }
+
+  const termsPlain = plainTextFromHtml(row.terms_html as string | null);
+  if (termsPlain.length < 10) {
+    return {
+      ok: false,
+      message: "Add terms & conditions before publishing.",
+    };
+  }
+
+  const schedule = row.sale_dates_json;
+  if (
+    !Array.isArray(schedule) ||
+    schedule.length < 1 ||
+    schedule.length > 4
+  ) {
+    return {
+      ok: false,
+      message: "Set your sale days (step 3) before publishing.",
+    };
   }
 
   const publishedAt = new Date().toISOString();

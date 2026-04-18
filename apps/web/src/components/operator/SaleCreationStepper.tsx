@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -61,7 +62,16 @@ export function SaleCreationStepper({ steps }: Props) {
               >
                 <StepCircle
                   state={state}
-                  label={state === "completed" ? "✓" : step.id}
+                  label={
+                    state === "completed" ? (
+                      <Check
+                        className="size-[1.125rem] stroke-[2.5] text-zinc-950"
+                        aria-hidden
+                      />
+                    ) : (
+                      step.id
+                    )
+                  }
                 />
 
                 <div className="space-y-0.5">
