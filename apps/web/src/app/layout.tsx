@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Anton, Inter, Geist } from "next/font/google";
 import "./globals.css";
+import { DevelopmentStageBanner } from "@/components/DevelopmentStageBanner";
 import { Footer } from "@/components/FooterBar";
 import { NavBar } from "@/components/NavBar";
 import { PersonaProvider } from "@/components/persona/PersonaProvider";
@@ -21,9 +22,12 @@ const anton = Anton({
 });
 
 export const metadata: Metadata = {
-  title: "Estate Sales, Unchained — Coming Soon",
+  title: {
+    default: "Open Estate Sales — browse & list free",
+    template: "%s — Open Estate Sales",
+  },
   description:
-    "The free, modern alternative to EstateSales.net — built for operators who are tired of paying to list their own inventory.",
+    "Find local estate sales on the map or list your own — free for shoppers and operators.",
 };
 
 export default function RootLayout({
@@ -54,6 +58,7 @@ export default function RootLayout({
             />
             <div className="relative z-10 flex min-h-screen flex-col">
               <NavBar />
+              <DevelopmentStageBanner />
               <div className="flex flex-1 flex-col">{children}</div>
               <Footer />
             </div>

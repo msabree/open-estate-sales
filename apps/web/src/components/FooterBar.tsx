@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 
-import { FooterNewsletter } from "@/components/FooterNewsletter";
 import { GithubIcon } from "@/components/icons/Github";
 import { DiscordIcon, FacebookIcon, XIcon } from "@/components/icons/Social";
 import { SiteLogo } from "@/components/icons/Logo";
@@ -120,8 +119,6 @@ export function Footer({ className }: FooterProps) {
                 </span>
               </div>
             </div>
-
-            <FooterNewsletter />
           </div>
 
           <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">

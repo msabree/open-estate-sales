@@ -24,15 +24,17 @@ export function NavBar({ className }: NavBarProps) {
       )}
     >
       <div className="mx-auto flex h-14 max-w-6xl flex-wrap items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
-        <SiteLogo size="compact" />
-        <div className="flex flex-1 flex-wrap items-center justify-end gap-3 sm:gap-4 md:flex-nowrap md:justify-between">
+        <div className="flex min-w-0 flex-1 items-baseline gap-2 sm:gap-3">
+          <SiteLogo size="compact" />
+          <span className="hidden truncate text-[0.65rem] font-medium uppercase tracking-wide text-muted-foreground sm:inline md:text-xs">
+            Free listings. Open to use.
+          </span>
+        </div>
+        <div className="flex flex-1 flex-wrap items-center justify-end gap-2 sm:gap-3 md:flex-nowrap md:justify-end md:gap-4">
           <nav
-            className="order-last flex w-full items-center gap-4 text-sm font-medium uppercase tracking-wider text-muted-foreground md:order-none md:ml-6 md:w-auto md:gap-6"
+            className="order-last flex w-full items-center gap-3 text-sm font-medium uppercase tracking-wider text-muted-foreground md:order-none md:ml-4 md:w-auto md:gap-5"
             aria-label="Main"
           >
-            <Link href="/" className="transition-colors hover:text-accent">
-              Home
-            </Link>
             {isOperator ? (
               <Link
                 href="/dashboard"
@@ -42,11 +44,24 @@ export function NavBar({ className }: NavBarProps) {
               </Link>
             ) : null}
             <Link href="/sales" className="transition-colors hover:text-accent">
-              Explore
+              Browse
             </Link>
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold text-foreground transition-colors hover:text-accent sm:hidden"
+            >
+              List
+            </Link>
+            <Link
+              href="/dashboard"
+              className="hidden text-sm font-semibold text-foreground transition-colors hover:text-accent sm:inline"
+            >
+              List a sale
+            </Link>
+            {/* Persona only applies once signed in; guests browse as shoppers. */}
             {!loading && user ? <PersonaSwitcher /> : null}
             {!loading && !user ? (
               <Link

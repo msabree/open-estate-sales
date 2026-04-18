@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { loginSchema } from "@/form-schemas/login";
+import { PERSONA_METADATA_KEY, type Persona } from "@/lib/persona";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -123,6 +124,10 @@ export async function signup(formData: FormData): Promise<AuthResult> {
     };
   }
 
+  const personaRaw = formData.get("persona");
+  const persona: Persona =
+    personaRaw === "operator" ? "operator" : "shopper";
+
   const supabase = await createClient();
   const origin = siteOrigin();
   const { data, error } = await supabase.auth.signUp({
@@ -130,6 +135,9 @@ export async function signup(formData: FormData): Promise<AuthResult> {
     password: parsed.data.password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        [PERSONA_METADATA_KEY]: persona,
+      },
     },
   });
 

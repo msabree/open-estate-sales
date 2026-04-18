@@ -27,7 +27,7 @@ export default function ExploreSales({
   initialCenter = [33.749, -84.388],
 }: Props) {
   const [center, setCenter] = useState<[number, number]>(initialCenter);
-  const [location, setLocation] = useState("Choose location");
+  const [location, setLocation] = useState("Sales near me");
   const [dateRange, setDateRange] = useState<DateRange>("all");
   const [distance, setDistance] = useState<number>(25);
   const [saleType, setSaleType] = useState<SaleType>("all");

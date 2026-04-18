@@ -2,8 +2,10 @@
 
 import { auth, type AuthResult } from "./actions";
 import ForgotPassword from "@/components/ForgotPassword";
-import { loginSchema, type LoginFormData } from "@/form-schemas/login";
 import { SiteLogo } from "@/components/icons/Logo";
+import { loginSchema, type LoginFormData } from "@/form-schemas/login";
+import type { Persona } from "@/lib/persona";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,6 +58,7 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [signupPersona, setSignupPersona] = useState<Persona>("shopper");
 
   const [authState, authFormAction] = useActionState(auth, initialAuthState);
   const [pending, startTransition] = useTransition();
@@ -77,6 +80,7 @@ function LoginForm() {
     fd.set("email", values.email);
     fd.set("password", values.password);
     if (!isLogin) fd.set("terms", agreedToTerms ? "on" : "");
+    if (!isLogin) fd.set("persona", signupPersona);
     startTransition(() => {
       authFormAction(fd);
     });
@@ -108,7 +112,7 @@ function LoginForm() {
           <div className="mb-8 text-center">
             <SiteLogo className="mx-auto block [&_span:last-child]:text-white" />
             <p className="mt-3 text-sm text-white/85 drop-shadow">
-              Free estate sale listings — sign in to manage your operator account.
+              Sign in to browse or list. New accounts pick shopper or operator on sign up.
             </p>
           </div>
 
@@ -170,6 +174,46 @@ function LoginForm() {
                   {authState.success === false ? (
                     <div className="rounded-lg border border-red-400/35 bg-red-500/10 p-3 text-sm text-red-100">
                       <AuthErrorMessage state={authState} isLogin={isLogin} />
+                    </div>
+                  ) : null}
+
+                  {!isLogin ? (
+                    <div className="rounded-xl border border-white/20 bg-black/20 p-4">
+                      <p className="mb-3 text-center text-sm font-medium text-white/95">
+                        How are you using Open Estate Sales?
+                      </p>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <button
+                          type="button"
+                          onClick={() => setSignupPersona("shopper")}
+                          className={cn(
+                            "rounded-lg border px-3 py-3 text-left text-sm transition",
+                            signupPersona === "shopper"
+                              ? "border-accent bg-white/15 text-white shadow-sm"
+                              : "border-white/15 text-white/80 hover:border-white/35",
+                          )}
+                        >
+                          <span className="font-semibold">Shopper</span>
+                          <span className="mt-1 block text-xs text-white/70">
+                            Browse sales, save favorites, get alerts.
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSignupPersona("operator")}
+                          className={cn(
+                            "rounded-lg border px-3 py-3 text-left text-sm transition",
+                            signupPersona === "operator"
+                              ? "border-accent bg-white/15 text-white shadow-sm"
+                              : "border-white/15 text-white/80 hover:border-white/35",
+                          )}
+                        >
+                          <span className="font-semibold">Operator</span>
+                          <span className="mt-1 block text-xs text-white/70">
+                            List sales and manage your listings.
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   ) : null}
 
