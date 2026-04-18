@@ -26,9 +26,6 @@ export function NavBar({ className }: NavBarProps) {
       <div className="mx-auto flex h-14 max-w-6xl flex-wrap items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
         <div className="flex min-w-0 flex-1 items-baseline gap-2 sm:gap-3">
           <SiteLogo size="compact" />
-          <span className="hidden truncate text-[0.65rem] font-medium uppercase tracking-wide text-muted-foreground sm:inline md:text-xs">
-            Free listings. Open to use.
-          </span>
         </div>
         <div className="flex flex-1 flex-wrap items-center justify-end gap-2 sm:gap-3 md:flex-nowrap md:justify-end md:gap-4">
           <nav
