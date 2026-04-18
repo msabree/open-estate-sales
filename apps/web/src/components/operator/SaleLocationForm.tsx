@@ -1,9 +1,8 @@
 "use client";
 
-import {
-  updateSaleLocation,
-  type SaleLocationRow,
-} from "@/app/operator/actions";
+import { updateSaleLocation } from "@/apis/data/sales-client";
+import type { OperatorSaleWizard } from "@/app/dashboard/actions";
+import { OperatorSaleWizardShell } from "@/components/operator/OperatorSaleWizardShell";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,13 +11,11 @@ import {
 } from "@/lib/places/parse-address";
 import { cn } from "@/lib/utils";
 import { loadGoogleMaps } from "@/utils/googleMaps";
+import { useMutation } from "@tanstack/react-query";
 import { AlertCircle, Clock, Loader2, MapPin } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
-import { SaleCreationStepper } from "@/components/operator/SaleCreationStepper";
-import { saleCreationSteps } from "@/components/operator/sale-creation-steps";
 
 function isoToDatetimeLocal(iso: string): string {
   const d = new Date(iso);
@@ -35,7 +32,7 @@ function datetimeLocalToIso(value: string): string {
 
 type Props = {
   saleId: string;
-  initial: SaleLocationRow;
+  initial: OperatorSaleWizard;
 };
 
 /** gmp-select payload; @types/google.maps may not include the new widget yet. */
@@ -89,8 +86,11 @@ export default function SaleLocationForm({ saleId, initial }: Props) {
   );
 
   const [mapsLoading, setMapsLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const locationMutation = useMutation({
+    mutationFn: updateSaleLocation,
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const autocompleteRef = useRef<HTMLElement | null>(null);
@@ -191,7 +191,7 @@ export default function SaleLocationForm({ saleId, initial }: Props) {
   const coordsOk = (lat: number | null | undefined, lng: number | null | undefined) =>
     lat != null && lng != null && !Number.isNaN(lat) && !Number.isNaN(lng);
 
-  const handleSave = async () => {
+  const handleNext = () => {
     const trimmed = readTrimmedAddressFromWidget(autocompleteRef.current, address);
 
     if (!trimmed) {
@@ -219,44 +219,38 @@ export default function SaleLocationForm({ saleId, initial }: Props) {
     }
 
     setError(null);
-    setSaving(true);
 
-    const result = await updateSaleLocation({
-      saleId,
-      address: trimmed,
-      latitude: finalLat as number,
-      longitude: finalLng as number,
-      city: placeMeta.city,
-      state: placeMeta.state,
-      zip: placeMeta.zip,
-      addressRevealAt: datetimeLocalToIso(availableAt),
-    });
-
-    setSaving(false);
-
-    if (!result.ok) {
-      setError(result.message);
-      return;
-    }
-
-    router.push("/operator");
-    router.refresh();
+    locationMutation.mutate(
+      {
+        saleId,
+        address: trimmed,
+        latitude: finalLat as number,
+        longitude: finalLng as number,
+        city: placeMeta.city,
+        state: placeMeta.state,
+        zip: placeMeta.zip,
+        addressRevealAt: datetimeLocalToIso(availableAt),
+      },
+      {
+        onSuccess: (result) => {
+          if (!result.ok) {
+            setError(result.message);
+            return;
+          }
+          router.push(`/dashboard/sales/${saleId}/details`);
+          router.refresh();
+        },
+      },
+    );
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <SaleCreationStepper steps={saleCreationSteps(saleId)} />
-      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        Draft · {initial.title}
-      </p>
-      <h1 className="mt-2 font-display text-3xl uppercase tracking-tight text-foreground">
-        Sale location
-      </h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Set the street address, map coordinates, and when buyers can see the full
-        address.
-      </p>
-
+    <OperatorSaleWizardShell
+      saleId={saleId}
+      draftTitle={initial.title}
+      heading="Sale location"
+      description="Set the street address, map coordinates, and when buyers can see the full address."
+    >
       <div className="mt-8 space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
@@ -332,27 +326,27 @@ export default function SaleLocationForm({ saleId, initial }: Props) {
 
         <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border pt-4">
           <Link
-            href="/operator"
+            href="/dashboard"
             className={buttonVariants({ variant: "outline", size: "default" })}
           >
             Cancel
           </Link>
           <Button
-            onClick={() => void handleSave()}
-            disabled={saving || mapsLoading}
+            onClick={() => void handleNext()}
+            disabled={locationMutation.isPending || mapsLoading}
             className="bg-accent font-semibold text-zinc-950 hover:bg-accent/90"
           >
-            {saving ? (
+            {locationMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
                 Saving…
               </>
             ) : (
-              "Save location"
+              "Next"
             )}
           </Button>
         </div>
       </div>
-    </div>
+    </OperatorSaleWizardShell>
   );
 }

@@ -1,8 +1,9 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 let cached: SupabaseClient | null | undefined;
 
-/** Single anon-key client for browser usage (e.g. `functions.invoke`). */
+/** Browser client with cookie-backed session (pairs with `createServerClient` in `server.ts`). */
 export function getSupabaseBrowserClient(): SupabaseClient | null {
   if (cached !== undefined) {
     return cached;
@@ -13,6 +14,6 @@ export function getSupabaseBrowserClient(): SupabaseClient | null {
     cached = null;
     return null;
   }
-  cached = createClient(url, key);
+  cached = createBrowserClient(url, key);
   return cached;
 }

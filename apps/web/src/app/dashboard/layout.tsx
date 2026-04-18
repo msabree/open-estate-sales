@@ -1,7 +1,8 @@
+import { QueryProvider } from "@/providers/QueryProvider";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function OperatorLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,8 +13,12 @@ export default async function OperatorLayout({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login?next=/operator");
+    redirect("/login?next=/dashboard");
   }
 
-  return <div className="flex flex-1 flex-col">{children}</div>;
+  return (
+    <QueryProvider>
+      <div className="flex flex-1 flex-col">{children}</div>
+    </QueryProvider>
+  );
 }

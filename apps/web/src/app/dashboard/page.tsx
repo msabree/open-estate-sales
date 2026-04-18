@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CreateDraftSaleButton } from "@/components/operator/CreateDraftSaleButton";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function OperatorHomePage() {
+export default async function DashboardHomePage() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,7 +22,7 @@ export default async function OperatorHomePage() {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
       <h1 className="font-display text-3xl uppercase tracking-tight text-foreground">
-        Operator
+        Dashboard
       </h1>
       <p className="mt-2 text-muted-foreground">
         Drafts and listings tied to your account. More tools soon.
@@ -41,7 +41,7 @@ export default async function OperatorHomePage() {
             {sales.map((row) => (
               <li key={row.id}>
                 <Link
-                  href={`/operator/sales/${row.id}/location`}
+                  href={`/dashboard/sales/${row.id}/location`}
                   className="flex flex-col gap-1 px-4 py-4 transition hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <span className="font-medium text-foreground">{row.title}</span>

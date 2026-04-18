@@ -1,4 +1,4 @@
-import { getSaleForOperator } from "@/app/operator/actions";
+import { getSaleForOperator } from "@/app/dashboard/actions";
 import SaleLocationForm from "@/components/operator/SaleLocationForm";
 import { notFound } from "next/navigation";
 

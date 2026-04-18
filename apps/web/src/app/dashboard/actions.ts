@@ -113,7 +113,7 @@ export async function createDraftSale(): Promise<ActionResult<{ saleId: string }
     return { ok: false, message: error?.message ?? "Could not create draft." };
   }
 
-  revalidatePath("/operator");
+  revalidatePath("/dashboard");
   return { ok: true, data: { saleId: data.id } };
 }
 
@@ -142,9 +142,11 @@ export async function listOperatorSales(): Promise<
   return { ok: true, data: data ?? [] };
 }
 
-export type SaleLocationRow = {
+/** Operator-facing sale row for the create-sale wizard and location form. */
+export type OperatorSaleWizard = {
   id: string;
   title: string;
+  description: string | null;
   address: string | null;
   lat: number | null;
   lng: number | null;
@@ -154,18 +156,25 @@ export type SaleLocationRow = {
   address_reveal_at: string;
   region_slug: string;
   listing_slug: string;
+  start_date: string;
+  end_date: string;
+  preview_times: string | null;
+  status: string;
 };
+
+/** @deprecated Use OperatorSaleWizard */
+export type SaleLocationRow = OperatorSaleWizard;
 
 export async function getSaleForOperator(
   saleId: string,
-): Promise<ActionResult<SaleLocationRow>> {
+): Promise<ActionResult<OperatorSaleWizard>> {
   const { supabase, user } = await getUser();
   if (!user) return { ok: false, message: "Not signed in." };
 
   const { data, error } = await supabase
     .from("sales")
     .select(
-      "id, title, address, lat, lng, city, state, zip, address_reveal_at, region_slug, listing_slug",
+      "id, title, description, address, lat, lng, city, state, zip, address_reveal_at, region_slug, listing_slug, start_date, end_date, preview_times, status",
     )
     .eq("id", saleId)
     .eq("operator_id", user.id)
@@ -220,8 +229,8 @@ export async function updateSaleLocation(
 
   if (error) return { ok: false, message: error.message };
 
-  revalidatePath("/operator");
-  revalidatePath(`/operator/sales/${saleId}/location`);
+  revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/sales/${saleId}/location`);
   revalidatePath("/sales");
   return { ok: true };
 }

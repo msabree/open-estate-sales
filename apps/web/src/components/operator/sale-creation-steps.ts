@@ -1,5 +1,5 @@
 export function saleCreationSteps(saleId: string) {
-  const base = `/operator/sales/${saleId}`;
+  const base = `/dashboard/sales/${saleId}`;
   return [
     { id: 1, name: "Info", description: "Location", href: `${base}/location` },
     { id: 2, name: "Details", description: "About the sale", href: `${base}/details` },
