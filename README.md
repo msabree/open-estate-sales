@@ -2,8 +2,9 @@
 
 **Open Estate Sales** is a free, open way to discover and post estate sales. We are building a public alternative so communities are not locked into a single paid listing gatekeeper. For years, many areas have effectively depended on one commercial directory (for example **EstateSales.net** / **ES.NET**); this project is meant to break that kind of lock-in with software anyone can inspect, host, and extend.
 
-**Website:** [openestatesales.com](https://openestatesales.com)
-**Developer:** `developer.openestatesales.com`
+**Website:** [openestatesales.com](https://openestatesales.com)  
+**Developer:** `developer.openestatesales.com`  
+**Repository:** [github.com/openestatesales/core](https://github.com/openestatesales/core)
 
 ## Why this exists
 

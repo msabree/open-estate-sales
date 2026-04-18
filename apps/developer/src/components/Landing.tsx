@@ -185,7 +185,10 @@ export function Landing({
               tell us what endpoints, docs, and examples would unblock you.
             </p>
             <div className="ctaRow" style={{ marginTop: 14 }}>
-              <a className="btn" href="https://github.com">
+              <a
+                className="btn"
+                href="https://github.com/openestatesales/core/issues"
+              >
                 Open an issue <ArrowRight />
               </a>
               <a className="btn" href="https://openestatesales.com">

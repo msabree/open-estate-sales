@@ -7,7 +7,7 @@ export default function StatusPage() {
       <p className="mt-4 text-muted-foreground">
         Public status page — coming when we wire uptime checks. For now, check{" "}
         <a
-          href="https://github.com/msabree/open-estate-sales"
+          href="https://github.com/openestatesales/core"
           className="font-medium text-accent hover:underline"
         >
           GitHub

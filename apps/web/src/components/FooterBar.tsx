@@ -7,7 +7,7 @@ import { SiteLogo } from "@/components/icons/Logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
-const REPO = "https://github.com/msabree/open-estate-sales";
+const REPO = "https://github.com/openestatesales/core";
 const DEV_PORTAL_PROD = "https://developer.openestatesales.com";
 
 function developerPortalUrl() {
