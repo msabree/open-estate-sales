@@ -1,18 +1,21 @@
+"use client";
+
 import Link from "next/link";
 
+import { PersonaSwitcher } from "@/components/PersonaSwitcher";
+import { usePersona } from "@/components/persona/PersonaProvider";
 import { SiteLogo } from "@/components/icons/Logo";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const links = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/sales", label: "Explore" },
-] as const;
 
 type NavBarProps = {
   className?: string;
 };
 
 export function NavBar({ className }: NavBarProps) {
+  const { user, persona, loading } = usePersona();
+  const isOperator = Boolean(user) && persona === "operator";
+
   return (
     <header
       className={cn(
@@ -20,22 +23,44 @@ export function NavBar({ className }: NavBarProps) {
         className,
       )}
     >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-6xl flex-wrap items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
         <SiteLogo size="compact" />
-        <nav
-          className="flex items-center gap-6 text-sm font-medium uppercase tracking-wider text-muted-foreground"
-          aria-label="Main"
-        >
-          {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="transition-colors hover:text-accent"
-            >
-              {label}
+        <div className="flex flex-1 flex-wrap items-center justify-end gap-3 sm:gap-4 md:flex-nowrap md:justify-between">
+          <nav
+            className="order-last flex w-full items-center gap-4 text-sm font-medium uppercase tracking-wider text-muted-foreground md:order-none md:ml-6 md:w-auto md:gap-6"
+            aria-label="Main"
+          >
+            <Link href="/" className="transition-colors hover:text-accent">
+              Home
             </Link>
-          ))}
-        </nav>
+            {isOperator ? (
+              <Link
+                href="/dashboard"
+                className="transition-colors hover:text-accent"
+              >
+                Dashboard
+              </Link>
+            ) : null}
+            <Link href="/sales" className="transition-colors hover:text-accent">
+              Explore
+            </Link>
+          </nav>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            {!loading && user ? <PersonaSwitcher /> : null}
+            {!loading && !user ? (
+              <Link
+                href="/login"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" }),
+                  "font-semibold uppercase tracking-wider",
+                )}
+              >
+                Sign in
+              </Link>
+            ) : null}
+          </div>
+        </div>
       </div>
     </header>
   );

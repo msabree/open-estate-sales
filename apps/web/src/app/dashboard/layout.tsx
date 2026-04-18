@@ -1,3 +1,4 @@
+import { ShopperOnDashboardBanner } from "@/components/dashboard/ShopperOnDashboardBanner";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -18,6 +19,7 @@ export default async function DashboardLayout({
 
   return (
     <QueryProvider>
+      <ShopperOnDashboardBanner />
       <div className="flex flex-1 flex-col">{children}</div>
     </QueryProvider>
   );

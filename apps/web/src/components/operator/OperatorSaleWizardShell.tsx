@@ -1,7 +1,7 @@
 "use client";
 
 import { SaleCreationStepper } from "@/components/operator/SaleCreationStepper";
-import { saleCreationSteps } from "@/components/operator/sale-creation-steps";
+import { saleCreationSteps } from "@/utils/sale-creation-steps";
 
 type Props = {
   saleId: string;

@@ -3,6 +3,7 @@ import { Anton, Inter, Geist } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/FooterBar";
 import { NavBar } from "@/components/NavBar";
+import { PersonaProvider } from "@/components/persona/PersonaProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
@@ -46,15 +47,17 @@ export default function RootLayout({
     >
       <body className="font-sans relative min-h-full bg-background text-foreground">
         <ThemeProvider>
-          <div
-            className="grain opacity-[0.08] dark:opacity-[0.22]"
-            aria-hidden
-          />
-          <div className="relative z-10 flex min-h-screen flex-col">
-            <NavBar />
-            <div className="flex flex-1 flex-col">{children}</div>
-            <Footer />
-          </div>
+          <PersonaProvider>
+            <div
+              className="grain opacity-[0.08] dark:opacity-[0.22]"
+              aria-hidden
+            />
+            <div className="relative z-10 flex min-h-screen flex-col">
+              <NavBar />
+              <div className="flex flex-1 flex-col">{children}</div>
+              <Footer />
+            </div>
+          </PersonaProvider>
         </ThemeProvider>
       </body>
     </html>
