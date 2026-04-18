@@ -58,7 +58,7 @@ export function SaleCreationStepper({ steps }: Props) {
               <Link
                 href={step.href}
                 aria-current={state === "current" ? "step" : undefined}
-                className="group flex flex-col items-center gap-2 text-center outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group relative z-10 flex flex-col items-center gap-2 text-center outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <StepCircle
                   state={state}
@@ -94,7 +94,7 @@ export function SaleCreationStepper({ steps }: Props) {
               {i !== steps.length - 1 ? (
                 <div
                   className={cn(
-                    "absolute left-1/2 top-[18px] h-0.5 w-full -translate-y-1/2",
+                    "pointer-events-none absolute left-1/2 top-[18px] h-0.5 w-full -translate-y-1/2",
                     i < currentIndex ? "bg-accent" : "bg-border",
                   )}
                   style={{ right: "-50%" }}
