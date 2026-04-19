@@ -224,8 +224,9 @@ export default function SalesMap({ sales, center, distance = 25, onCenterChange 
 
       const position = { lat, lng };
 
-      // Determine marker style based on sale type
-      const isCompanySale = sale.workspace_id && sale.workspace_id !== sale.created_by;
+      const isCompanySale =
+        sale.operator_kind === "company" ||
+        Boolean(sale.workspace_id && sale.workspace_id !== sale.created_by);
 
       const hasAdvanced =
         Boolean(google.maps.marker?.AdvancedMarkerElement) &&

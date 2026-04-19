@@ -1,11 +1,24 @@
 "use client";
 
+import type { ComponentProps } from "react";
+
 import { useCreateSale } from "@/apis/hooks/useCreateSale";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function CreateDraftSaleButton() {
+type Props = {
+  className?: string;
+  label?: string;
+  size?: ComponentProps<typeof Button>["size"];
+};
+
+export function CreateDraftSaleButton({
+  className,
+  label = "New draft sale",
+  size = "default",
+}: Props) {
   const router = useRouter();
   const createSale = useCreateSale();
 
@@ -28,9 +41,13 @@ export function CreateDraftSaleButton() {
     <div className="space-y-2">
       <Button
         type="button"
+        size={size}
         onClick={() => void handleClick()}
         disabled={createSale.isPending}
-        className="bg-accent font-semibold text-white hover:bg-accent/90"
+        className={cn(
+          "bg-accent font-semibold text-white hover:bg-accent/90",
+          className,
+        )}
       >
         {createSale.isPending ? (
           <>
@@ -38,7 +55,10 @@ export function CreateDraftSaleButton() {
             Creating…
           </>
         ) : (
-          "New draft sale"
+          <>
+            <Plus className="mr-2 size-4" aria-hidden />
+            {label}
+          </>
         )}
       </Button>
       {errorMessage ? (

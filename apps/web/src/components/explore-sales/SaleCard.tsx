@@ -45,13 +45,77 @@ type SaleCardProps = {
   /** First cards in the list: pass true for slightly faster image loading */
   priority?: boolean;
   className?: string;
+  /** `grid` = compact tile for map+browse split (2 columns). `default` = full-width row card. */
+  variant?: "default" | "grid";
 };
 
-export default function SaleCard({ sale, priority, className }: SaleCardProps) {
+export default function SaleCard({
+  sale,
+  priority,
+  className,
+  variant = "default",
+}: SaleCardProps) {
   const href = sale.href ?? salePublicPath(sale.region_slug, sale.listing_slug);
   const company = isCompanySale(sale);
   const dateSummary = formatSaleDateSummary(sale.sale_dates);
   const imageSrc = sale.main_display_image?.trim() || "/placeholder.svg";
+
+  if (variant === "grid") {
+    return (
+      <Link
+        href={href}
+        className={cn(
+          "group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm transition",
+          "hover:border-accent/40 hover:shadow-md",
+          "dark:border-zinc-800 dark:bg-zinc-950/60 dark:hover:border-accent/35",
+          className,
+        )}
+      >
+        <div className="relative aspect-[4/3] bg-muted">
+          <Image
+            src={imageSrc}
+            alt={sale.title}
+            fill
+            sizes="(max-width: 640px) 45vw, (max-width: 1280px) 22vw, 200px"
+            className="object-cover transition duration-300 group-hover:opacity-95"
+            priority={priority}
+          />
+          <span
+            className={cn(
+              "absolute left-2 top-2 inline-flex max-w-[calc(100%-1rem)] items-center gap-0.5 truncate rounded-full px-2 py-0.5 text-[10px] font-medium ring-1 ring-black/10 sm:text-xs",
+              company
+                ? "bg-zinc-900/90 text-accent"
+                : "bg-white/95 text-zinc-800 dark:bg-zinc-950/90 dark:text-zinc-100",
+            )}
+          >
+            {company ? (
+              <Building2 className="size-3 shrink-0" aria-hidden />
+            ) : (
+              <User className="size-3 shrink-0" aria-hidden />
+            )}
+            <span className="truncate">{company ? "Company" : "Private"}</span>
+          </span>
+        </div>
+        <div className="flex flex-1 flex-col gap-1.5 p-2.5 sm:p-3">
+          <h3 className="line-clamp-2 text-left text-sm font-semibold leading-snug tracking-tight text-foreground">
+            {sale.title}
+          </h3>
+          <p className="flex items-start gap-1 text-[11px] text-muted-foreground sm:text-xs">
+            <MapPin className="mt-0.5 size-3 shrink-0 text-accent" aria-hidden />
+            <span className="line-clamp-2">
+              {sale.city}, {sale.state}
+            </span>
+          </p>
+          {dateSummary ? (
+            <p className="mt-auto flex items-center gap-1 text-[11px] text-foreground/80 dark:text-zinc-300 sm:text-xs">
+              <CalendarRange className="size-3 shrink-0 text-accent" aria-hidden />
+              <span className="line-clamp-1">{dateSummary}</span>
+            </p>
+          ) : null}
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link

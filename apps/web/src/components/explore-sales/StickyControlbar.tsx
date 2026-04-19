@@ -146,53 +146,60 @@ export default function StickyControlBar({
             </div>
           </div>
 
-          {/* View Toggle (full width segmented on mobile) */}
+          {/* Mobile: List | Map | Marketplace. Desktop (lg+): map+grid always — only Marketplace toggle. */}
           <div className="order-4 md:order-3 w-full md:w-auto">
-            <div className="flex w-full rounded-lg border border-border bg-zinc-100/80 p-1 dark:border-zinc-800 dark:bg-zinc-900/60 md:w-auto">
+            <div className="flex w-full rounded-lg border border-border bg-zinc-100/80 p-1 dark:border-zinc-800 dark:bg-zinc-900/60 md:w-auto lg:inline-flex lg:min-w-0">
+              <div className="flex flex-1 gap-0.5 lg:hidden">
+                <button
+                  onClick={() => {
+                    onSetMarketplaceMode(false);
+                    onSetViewMode("list");
+                  }}
+                  className={`min-w-0 flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:py-1.5 ${
+                    viewMode === "list" && !marketplaceMode
+                      ? "bg-accent text-white shadow-sm"
+                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+                  }`}
+                  type="button"
+                  aria-pressed={viewMode === "list" && !marketplaceMode}
+                >
+                  List
+                </button>
+                <button
+                  onClick={() => {
+                    onSetMarketplaceMode(false);
+                    onSetViewMode("map");
+                  }}
+                  className={`min-w-0 flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:py-1.5 ${
+                    viewMode === "map" && !marketplaceMode
+                      ? "bg-accent text-white shadow-sm"
+                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+                  }`}
+                  type="button"
+                  aria-pressed={viewMode === "map" && !marketplaceMode}
+                >
+                  Map
+                </button>
+              </div>
               <button
                 onClick={() => {
-                  onSetMarketplaceMode(false);
-                  onSetViewMode('list');
+                  if (marketplaceMode) {
+                    onSetMarketplaceMode(false);
+                    onSetViewMode("map");
+                  } else {
+                    onSetMarketplaceMode(true);
+                    onSetViewMode("list");
+                  }
                 }}
-                className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:flex-none md:py-1.5 ${
-                  viewMode === "list" && !marketplaceMode
-                    ? "bg-accent text-white shadow-sm"
-                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
-                }`}
-                type="button"
-                aria-pressed={viewMode === 'list' && !marketplaceMode}
-              >
-                List
-              </button>
-              <button
-                onClick={() => {
-                  onSetMarketplaceMode(false);
-                  onSetViewMode('map');
-                }}
-                className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:flex-none md:py-1.5 ${
-                  viewMode === "map" && !marketplaceMode
-                    ? "bg-accent text-white shadow-sm"
-                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
-                }`}
-                type="button"
-                aria-pressed={viewMode === 'map' && !marketplaceMode}
-              >
-                Map
-              </button>
-              <button
-                onClick={() => {
-                  onSetMarketplaceMode(true);
-                  onSetViewMode('list');
-                }}
-                className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 md:flex-none md:py-1.5 ${
+                className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 lg:px-5 md:py-1.5 ${
                   marketplaceMode
                     ? "bg-accent text-white shadow-sm"
                     : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
-                }`}
+                } ${!marketplaceMode ? "max-lg:flex-1" : "w-full max-lg:flex-1"}`}
                 type="button"
                 aria-pressed={marketplaceMode}
               >
-                Marketplace
+                {marketplaceMode ? "Estate sales" : "Marketplace"}
               </button>
             </div>
           </div>

@@ -17,6 +17,7 @@ import {
   DEMO_MARKETPLACE_ITEMS,
   type MarketplaceItem,
 } from "@/data/demo-marketplace-items";
+import { cn } from "@/lib/utils";
 
 type Props = {
   sales: ExploreSale[];
@@ -47,7 +48,9 @@ export default function ExploreSales({
 
     if (saleType !== "all") {
       out = out.filter((s) => {
-        const isCompany = Boolean(s.workspace_id && s.workspace_id !== s.created_by);
+        const isCompany =
+          s.operator_kind === "company" ||
+          Boolean(s.workspace_id && s.workspace_id !== s.created_by);
         return saleType === "company" ? isCompany : !isCompany;
       });
     }
@@ -112,7 +115,7 @@ export default function ExploreSales({
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)]">
+    <div className="flex min-h-0 flex-1 flex-col">
       <StickyControlBar
         location={location}
         onChangeLocation={setLocation}
@@ -141,95 +144,114 @@ export default function ExploreSales({
         availableCategories={itemCategories}
       />
 
-      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
-        {marketplaceMode ? (
-          <>
-            <div className="mb-6 flex flex-col gap-2 rounded-xl border border-border bg-card/80 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:bg-zinc-950/40">
-              <p className="text-sm text-muted-foreground">
-                Item previews from nearby sales · Within {distance} mi
-              </p>
-              <p className="text-sm font-semibold text-accent">
-                {filteredItems.length} item{filteredItems.length !== 1 ? "s" : ""}
-              </p>
+      {marketplaceMode ? (
+        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">
+          <div className="mb-6 flex flex-col gap-2 rounded-xl border border-border bg-card/80 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:bg-zinc-950/40">
+            <p className="text-sm text-muted-foreground">
+              Item previews from nearby sales · Within {distance} mi
+            </p>
+            <p className="text-sm font-semibold text-accent">
+              {filteredItems.length} item{filteredItems.length !== 1 ? "s" : ""}
+            </p>
+          </div>
+
+          {filteredItems.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-12 text-center text-muted-foreground">
+              No items match your search. Try another category or keyword.
             </div>
-
-            {filteredItems.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-12 text-center text-muted-foreground">
-                No items match your search. Try another category or keyword.
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-                {filteredItems.map((item) => (
-                  <MarketplaceCard
-                    key={item.itemId}
-                    saleId={item.saleId}
-                    itemId={item.itemId}
-                    regionSlug={item.regionSlug}
-                    listingSlug={item.listingSlug}
-                    title={item.title}
-                    description={item.description}
-                    imageUrl={item.imageUrl}
-                    tags={item.tags ?? []}
-                    saleTitle={item.saleTitle}
-                  />
-                ))}
-              </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {filteredItems.map((item) => (
+                <MarketplaceCard
+                  key={item.itemId}
+                  saleId={item.saleId}
+                  itemId={item.itemId}
+                  regionSlug={item.regionSlug}
+                  listingSlug={item.listingSlug}
+                  title={item.title}
+                  description={item.description}
+                  imageUrl={item.imageUrl}
+                  tags={item.tags ?? []}
+                  saleTitle={item.saleTitle}
+                />
+              ))}
+            </div>
+          )}
+        </main>
+      ) : (
+        <div
+          className={cn(
+            "flex min-h-0 flex-1 flex-col overflow-hidden",
+            "lg:min-h-[min(900px,calc(100dvh-7.5rem))] lg:flex-row",
+          )}
+        >
+          {/* Map — left; full-width on mobile when map mode */}
+          <div
+            className={cn(
+              "relative min-h-[48vh] w-full min-w-0 bg-muted lg:min-h-0 lg:flex-[1.2_1_0%]",
+              viewMode === "list" && "hidden lg:block",
             )}
-          </>
-        ) : (
-          <>
-            {viewMode === "map" ? (
-              <div className="overflow-hidden rounded-2xl border border-border bg-white/60 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/40">
-                <div className="h-[520px]">
-                  <SalesMap
-                    sales={filteredSales}
-                    center={center}
-                    distance={distance}
-                    onCenterChange={(c) => {
-                      setCenter(c);
-                      setLocation(`${c[0].toFixed(3)}, ${c[1].toFixed(3)}`);
-                    }}
-                  />
-                </div>
-              </div>
-            ) : null}
+          >
+            <div className="absolute inset-0 min-h-[48vh] lg:min-h-full">
+              <SalesMap
+                sales={filteredSales}
+                center={center}
+                distance={distance}
+                onCenterChange={(c) => {
+                  setCenter(c);
+                  setLocation(`${c[0].toFixed(3)}, ${c[1].toFixed(3)}`);
+                }}
+              />
+            </div>
+          </div>
 
-            <div className={viewMode === "map" ? "mt-6" : ""}>
+          {/* Results — right; 2×n grid on lg+; full-width list on mobile */}
+          <aside
+            className={cn(
+              "flex w-full flex-col overflow-hidden border-t border-border bg-background",
+              "lg:w-[min(100%,440px)] lg:shrink-0 lg:border-l lg:border-t-0 xl:w-[min(100%,500px)]",
+              viewMode === "map" && "hidden max-h-none lg:flex",
+            )}
+          >
+            <div className="shrink-0 border-b border-border bg-background/95 px-2 py-1.5 backdrop-blur-sm sm:px-3 lg:sticky lg:top-0 lg:z-10">
               <ActiveFilters
                 filters={{ dateRange, saleType, distance }}
                 salesCount={filteredSales.length}
+                className="mb-0 rounded-lg border-0 bg-transparent p-2 shadow-none sm:p-3"
               />
             </div>
 
-            {filteredSales.length === 0 ? (
-              <div className="mt-6 rounded-2xl border border-border bg-white/70 p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/40">
-                <EmptySales
-                  title={
-                    sales.length === 0
-                      ? undefined
-                      : "No matching sales"
-                  }
-                  subtitle={
-                    sales.length === 0
-                      ? undefined
-                      : "Try another search or filter—or switch to list view to browse everything loaded."
-                  }
-                  showTips={sales.length === 0}
-                />
-              </div>
-            ) : null}
-
-            {viewMode === "list" && filteredSales.length > 0 ? (
-              <div className="mt-8 grid gap-5">
-                {filteredSales.map((s, index) => (
-                  <SaleCard key={s.id} sale={s} priority={index < 3} />
-                ))}
-              </div>
-            ) : null}
-          </>
-        )}
-      </main>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-8 pt-2 sm:px-3">
+              {filteredSales.length === 0 ? (
+                <div className="rounded-xl border border-border bg-card/90 p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/50 sm:p-6">
+                  <EmptySales
+                    title={
+                      sales.length === 0 ? undefined : "No matching sales"
+                    }
+                    subtitle={
+                      sales.length === 0
+                        ? undefined
+                        : "Try another search or loosen filters."
+                    }
+                    showTips={sales.length === 0}
+                  />
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  {filteredSales.map((s, index) => (
+                    <SaleCard
+                      key={s.id}
+                      sale={s}
+                      variant="grid"
+                      priority={index < 8}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }
-
