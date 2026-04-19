@@ -10,6 +10,20 @@ const remotePatterns: NonNullable<
   },
 ];
 
+/** Local Supabase API ports (config.toml may use non-default e.g. 54331). */
+const LOCAL_SUPABASE_PORTS = ["54321", "54322", "54331"] as const;
+
+for (const hostname of ["127.0.0.1", "localhost"] as const) {
+  for (const port of LOCAL_SUPABASE_PORTS) {
+    remotePatterns.push({
+      protocol: "http",
+      hostname,
+      port,
+      pathname: "/storage/v1/object/public/**",
+    });
+  }
+}
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 if (supabaseUrl) {
   try {
