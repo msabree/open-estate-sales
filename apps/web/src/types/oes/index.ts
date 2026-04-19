@@ -48,6 +48,8 @@ export type PublicSale = {
   operator_kind: "individual" | "company";
   photos?: PublicSalePhoto[];
   operator?: PublicOperator | null;
+  /** Set only on detail fetch: operator email for public contact (mailto / inquiry). */
+  listing_contact_email?: string | null;
 };
 
 /**

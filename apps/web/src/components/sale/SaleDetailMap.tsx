@@ -5,9 +5,11 @@ import type { ExploreSale } from "@/components/explore-sales/SaleCard";
 
 type Props = {
   sale: ExploreSale;
+  /** Shorter map for sidebar / secondary placement */
+  compact?: boolean;
 };
 
-export default function SaleDetailMap({ sale }: Props) {
+export default function SaleDetailMap({ sale, compact = false }: Props) {
   const lat = sale.lat;
   const lng = sale.lng;
   if (typeof lat !== "number" || typeof lng !== "number") {
@@ -18,7 +20,13 @@ export default function SaleDetailMap({ sale }: Props) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-muted/20 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/40">
-      <div className="h-[min(420px,55vh)] min-h-[260px] w-full">
+      <div
+        className={
+          compact
+            ? "h-52 min-h-[208px] w-full sm:h-56"
+            : "h-[min(420px,55vh)] min-h-[260px] w-full"
+        }
+      >
         <SalesMap sales={[sale]} center={center} distance={12} />
       </div>
     </div>

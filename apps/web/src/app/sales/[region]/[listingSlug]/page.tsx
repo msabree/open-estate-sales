@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertCircle, CalendarRange, MapPin } from "lucide-react";
+import { AlertCircle, CalendarRange, Clock, MapPin } from "lucide-react";
 
 import { getPublicSale } from "@/apis/data/sales";
+import { SaleBreadcrumbs } from "@/components/sale/SaleBreadcrumbs";
+import { SaleContactRunner } from "@/components/sale/SaleContactRunner";
 import { SaleDescriptionHtml } from "@/components/sale/SaleDescriptionHtml";
 import SaleDetailMap from "@/components/sale/SaleDetailMap";
+import { SaleHeroGallery } from "@/components/sale/SaleHeroGallery";
 import { salePhotoPublicUrl } from "@/config/sale-photos";
 import { publicSaleToExploreSale } from "@/lib/map/public-sale-to-explore-sale";
 import { absoluteUrl, canonicalSaleUrl } from "@/utils/seo";
@@ -38,6 +41,7 @@ function formatRevealAt(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   return new Intl.DateTimeFormat("en-US", {
+    timeZoneName: "short",
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -100,34 +104,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function OperatorCard({ operator }: { operator: PublicOperator | undefined }) {
+function ListedByLine({ operator }: { operator: PublicOperator | undefined }) {
   if (!operator) return null;
-
-  const isCompany = operator.operator_kind === "company";
-
+  const label = operator.company_name?.trim() || operator.name;
   return (
-    <div className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/50">
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        Listed by
-      </h3>
-      <p className="mt-3 text-lg font-semibold text-foreground">
-        {operator.company_name?.trim() || operator.name}
-      </p>
-      <p
-        className={`mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-          isCompany
-            ? "bg-accent/15 text-accent"
-            : "bg-muted text-muted-foreground"
-        }`}
-      >
-        {isCompany ? "Company" : "Private seller"}
-      </p>
-      {operator.city && operator.state ? (
-        <p className="mt-3 text-sm text-muted-foreground">
-          {operator.city}, {operator.state}
-        </p>
+    <p className="text-xs text-muted-foreground">
+      Listed by{" "}
+      <span className="font-medium text-foreground/90">{label}</span>
+      {operator.operator_kind === "company" ? (
+        <span className="ml-1 rounded-full bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium text-accent">
+          Company
+        </span>
       ) : null}
-    </div>
+    </p>
   );
 }
 
@@ -148,6 +137,10 @@ export default async function SaleDetailPage({ params }: Props) {
   const sortedPhotos = [...(sale.photos ?? [])].sort(
     (a, b) => a.sort_order - b.sort_order,
   );
+  const morePhotos = sortedPhotos.length > 5 ? sortedPhotos.slice(5) : [];
+
+  const runnerLabel =
+    sale.operator?.company_name?.trim() || sale.operator?.name || "the host";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -171,48 +164,28 @@ export default async function SaleDetailPage({ params }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50/70 via-background to-emerald-50/60 dark:from-zinc-950 dark:via-background dark:to-zinc-900/80">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-        <nav className="text-sm text-muted-foreground">
-          <Link href="/sales" className="hover:text-accent">
-            Sales
-          </Link>
-          <span className="mx-2">/</span>
-          <Link
-            href={`/sales/${sale.region_slug}`}
-            className="hover:text-accent"
-          >
-            {sale.region_slug}
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-foreground/80">{sale.listing_slug}</span>
-        </nav>
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+        <SaleBreadcrumbs
+          regionSlug={sale.region_slug}
+          listingTitleHint={
+            sale.title.length > 48 ? `${sale.title.slice(0, 45)}…` : sale.title
+          }
+        />
+
+        {sortedPhotos.length > 0 ? (
+          <div className="mt-6">
+            <SaleHeroGallery title={sale.title} photos={sortedPhotos} />
+          </div>
+        ) : null}
 
         <div className="mt-8 grid gap-8 lg:grid-cols-3 lg:gap-10">
-          <div className="space-y-6 lg:col-span-2">
-            <header className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/50 sm:p-8">
+          <div className="space-y-8 lg:col-span-2">
+            <header className="space-y-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                    {sale.title}
-                  </h1>
-                  <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground">
-                    <span className="inline-flex items-center gap-1.5">
-                      <MapPin className="size-4 shrink-0 text-accent" aria-hidden />
-                      {sale.city}, {sale.state}
-                      {sale.zip ? ` · ${sale.zip}` : null}
-                    </span>
-                  </p>
-                  <p className="mt-2 inline-flex items-center gap-2 text-sm text-foreground/90">
-                    <CalendarRange className="size-4 shrink-0 text-accent" aria-hidden />
-                    <span>
-                      {formatUsDate(sale.start_date)}
-                      {sale.start_date !== sale.end_date
-                        ? ` — ${formatUsDate(sale.end_date)}`
-                        : null}
-                    </span>
-                  </p>
-                </div>
+                <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                  {sale.title}
+                </h1>
                 {ended ? (
                   <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive ring-1 ring-destructive/20">
                     <AlertCircle className="size-3.5" aria-hidden />
@@ -220,67 +193,66 @@ export default async function SaleDetailPage({ params }: Props) {
                   </span>
                 ) : null}
               </div>
+
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="size-4 shrink-0 text-accent" aria-hidden />
+                  {sale.city}, {sale.state}
+                  {sale.zip ? ` · ${sale.zip}` : null}
+                </span>
+              </div>
+
+              <div className="space-y-2 rounded-xl border border-border bg-card/60 px-4 py-3 text-sm dark:border-zinc-800">
+                <p className="flex items-start gap-2 text-foreground/90">
+                  <Clock className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
+                  <span>
+                    {ended
+                      ? "This sale has ended."
+                      : addressIsExact && sale.address
+                        ? sale.address
+                        : sale.address_reveal_at
+                          ? `Address released ${formatRevealAt(sale.address_reveal_at)}`
+                          : "Address is shared at the scheduled reveal time."}
+                  </span>
+                </p>
+                <p className="flex items-center gap-2 text-foreground/90">
+                  <CalendarRange className="size-4 shrink-0 text-accent" aria-hidden />
+                  <span>
+                    {formatUsDate(sale.start_date)}
+                    {sale.start_date !== sale.end_date
+                      ? ` — ${formatUsDate(sale.end_date)}`
+                      : null}
+                  </span>
+                </p>
+              </div>
             </header>
 
-            {hasMapPin ? (
-              <section className="space-y-4" aria-labelledby="sale-location-heading">
+            {morePhotos.length > 0 ? (
+              <section aria-labelledby="more-photos-heading">
                 <h2
-                  id="sale-location-heading"
-                  className="text-lg font-semibold text-foreground"
+                  id="more-photos-heading"
+                  className="mb-3 text-base font-semibold text-foreground"
                 >
-                  Location
+                  More photos
                 </h2>
-                <SaleDetailMap sale={explore} />
-                <div className="rounded-2xl border border-border bg-card/80 p-5 dark:border-zinc-800 dark:bg-zinc-950/40">
-                  {ended ? (
-                    <p className="text-sm text-muted-foreground">
-                      This sale has ended; the map shows the approximate area that
-                      was advertised.
-                    </p>
-                  ) : addressIsExact ? (
-                    <p className="text-sm font-medium text-foreground">
-                      {sale.address}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      Street address is hidden until the scheduled reveal time
-                      {sale.address_reveal_at
-                        ? ` (${formatRevealAt(sale.address_reveal_at)})`
-                        : ""}
-                      . The pin is approximate.
-                    </p>
-                  )}
-                </div>
-              </section>
-            ) : null}
-
-            {sortedPhotos.length > 0 ? (
-              <section aria-labelledby="sale-photos-heading">
-                <h2
-                  id="sale-photos-heading"
-                  className="mb-4 text-lg font-semibold text-foreground"
-                >
-                  Photos
-                </h2>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  {sortedPhotos.map((photo, i) => {
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
+                  {morePhotos.map((photo, i) => {
                     const src = salePhotoPublicUrl(photo.storage_path);
                     if (!src) return null;
                     return (
                       <div
                         key={photo.id}
-                        className="relative aspect-square overflow-hidden rounded-xl border border-border bg-muted shadow-sm"
+                        className="relative aspect-square overflow-hidden rounded-lg border border-border bg-muted"
                       >
                         <Image
                           src={src}
                           alt={
                             photo.alt_text?.trim() ||
-                            `${sale.title} — photo ${i + 1}`
+                            `${sale.title} — photo ${i + 6}`
                           }
                           fill
                           className="object-cover"
-                          sizes="(max-width: 768px) 50vw, 33vw"
-                          priority={i === 0}
+                          sizes="(max-width: 768px) 45vw, 20vw"
                         />
                       </div>
                     );
@@ -291,12 +263,12 @@ export default async function SaleDetailPage({ params }: Props) {
 
             {sale.description?.trim() ? (
               <section
-                className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/50 sm:p-8"
+                className="rounded-2xl border border-border bg-card/80 p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/40 sm:p-8"
                 aria-labelledby="sale-about-heading"
               >
                 <h2
                   id="sale-about-heading"
-                  className="mb-4 text-lg font-semibold text-foreground"
+                  className="mb-4 font-display text-xl font-semibold text-foreground"
                 >
                   About this sale
                 </h2>
@@ -306,9 +278,9 @@ export default async function SaleDetailPage({ params }: Props) {
           </div>
 
           <aside className="space-y-6 lg:col-span-1">
-            <div className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/50">
+            <div className="rounded-2xl border border-border bg-card/90 p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/50">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Dates
+                Dates & hours
               </h3>
               <p className="mt-3 text-foreground">
                 <span className="font-medium">{formatUsDate(sale.start_date)}</span>
@@ -330,17 +302,38 @@ export default async function SaleDetailPage({ params }: Props) {
               ) : null}
             </div>
 
-            <OperatorCard operator={sale.operator ?? undefined} />
+            <SaleContactRunner
+              saleTitle={sale.title}
+              runnerLabel={runnerLabel}
+              contactEmail={sale.listing_contact_email ?? null}
+            />
 
-            <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-5 dark:border-zinc-800">
-              <p className="text-sm text-muted-foreground">
-                Browsing for more? Explore the map and list on the home page.
-              </p>
-              <Link
-                href="/sales"
-                className="mt-3 inline-flex text-sm font-medium text-accent hover:underline"
+            <ListedByLine operator={sale.operator ?? undefined} />
+
+            {hasMapPin ? (
+              <section
+                className="space-y-2"
+                aria-labelledby="area-map-heading"
               >
-                ← All estate sales
+                <h3
+                  id="area-map-heading"
+                  className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                >
+                  Area map
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Approximate location until the address is released.
+                </p>
+                <SaleDetailMap sale={explore} compact />
+              </section>
+            ) : null}
+
+            <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-4 dark:border-zinc-800">
+              <Link
+                href="/"
+                className="text-sm font-medium text-accent hover:underline"
+              >
+                ← Browse more estate sales
               </Link>
             </div>
           </aside>

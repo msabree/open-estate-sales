@@ -20,22 +20,31 @@ export async function getPublicSale(
     return null;
   }
 
-  const [{ data: photos }, { data: operatorRows }] = await Promise.all([
+  const [{ data: photos }, { data: operatorRows }, contactRes] = await Promise.all([
     supabase
       .from("sale_photos")
       .select("id, storage_path, sort_order, alt_text")
       .eq("sale_id", row.id)
       .order("sort_order", { ascending: true }),
     supabase.rpc("get_public_operator", { operator_id: row.operator_id }),
+    supabase.rpc("get_sale_listing_contact_email", { p_sale_id: row.id }),
   ]);
 
   const operator =
     operatorRows && operatorRows.length > 0 ? operatorRows[0] : null;
 
+  const listingEmail =
+    !contactRes.error &&
+    typeof contactRes.data === "string" &&
+    contactRes.data.includes("@")
+      ? contactRes.data
+      : null;
+
   const sale: PublicSale = {
     ...applyAddressReveal(row),
     photos: photos ?? [],
     operator: operator ?? undefined,
+    listing_contact_email: listingEmail,
   };
 
   return sale;

@@ -255,8 +255,8 @@ export function SalePhotoUploader({
           Listing photos (optional)
         </h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          Upload images so shoppers can preview your sale. You can add more later
-          from the dashboard.
+          Upload images so shoppers can preview your sale. The first photo in the
+          list order is used as the <span className="font-medium text-foreground/90">cover image</span> on your public listing and in search — put your best shot first (reorder anytime).
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
           {capped ? (
